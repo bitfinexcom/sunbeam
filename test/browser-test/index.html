@@ -1,0 +1,111 @@
+<html>
+<head>
+  <style>
+    .res-box {
+      position: relative;
+      border: 1px solid #eee;
+    }
+  </style>
+  <script src="./eosjs-dist.js"></script>
+  <script src="./sunbeam-dist.js"></script>
+
+  <script>
+    window.addEventListener('load', function (event) {
+      demo()
+    })
+
+    function demo () {
+      const readNodeConf = {
+        httpEndpoint: 'http://localhost:8888',
+        keyProvider: [
+          '5Kci5UR4h25CM4vCyQMTQy4pzMhqXZ8vnocYJJkm2eQb8cfHsWV'
+        ]
+      }
+
+      const writeNodeConf = {
+        httpEndpoint: 'http://writenode.bitfinex.com:8888',
+        keyProvider: [
+          '5Kci5UR4h25CM4vCyQMTQy4pzMhqXZ8vnocYJJkm2eQb8cfHsWV'
+        ]
+      }
+      const eos = {
+        Eos,
+        readNodeConf,
+        writeNodeConf
+      }
+
+      const sb = new Sunbeam(eos, { account: 'testuser1234' })
+
+      const order = sb.createOrder({
+        symbol: 'BTCUSD',
+        price: '1338',
+        amount: '1.337',
+        type: 'EXCHANGE_LIMIT',
+        clientId: 456
+      })
+
+      sb.place(order, (err, res) => {
+        if (err) throw err
+
+        const prettyTx = JSON.stringify(res, null, '  ')
+        document.getElementsByClassName('tx-result-box')[0].innerText = prettyTx
+
+        const prettyParsedOrder = JSON.stringify(order.parse(), null, '  ')
+        document.getElementsByClassName('parsed-order-box')[0].innerText = prettyParsedOrder
+
+        const prettySerializedOrder = JSON.stringify(order.serialize(), null, '  ')
+        document.getElementsByClassName('serialized-order-box')[0].innerText = prettySerializedOrder
+
+      })
+
+      sb.orderbook('BTCUSD', {}, (err, res) => {
+        if (err) throw err
+
+        const pretty = JSON.stringify(res, null, '  ')
+        document.getElementsByClassName('ob-result-box')[0].innerText = pretty
+      })
+
+      sb.orders('BTCUSD', {}, (err, res) => {
+        if (err) throw err
+
+        const pretty = JSON.stringify(res, null, '  ')
+        document.getElementsByClassName('orders-result-box')[0].innerText = pretty
+      })
+    }
+  </script>
+
+</head>
+<body>
+
+<div class="res-box">
+  Sent order data:
+  <br/>
+  <br/>
+  <br/>
+  <div style="float:left; margin-right: 50px;">
+    parsed
+    <pre class="parsed-order-box"></pre>
+  </div>
+  <div>
+    serialized
+    <pre class="serialized-order-box"></pre>
+  </div>
+</div>
+<br/>
+<div class="res-box">
+  Tx data:
+  <br/>
+  <pre class="tx-result-box"></pre>
+</div>
+<div class="res-box">
+  Orderbook (raw): -- set <b><pre style="display: inline">transform</pre></b> to true for BFX API v2 style
+  <br/>
+  <pre class="ob-result-box"></pre>
+</div>
+<div class="res-box">
+  Orders of user:
+  <br/>
+  <pre class="orders-result-box"></pre>
+</div>
+</body>
+</html>
