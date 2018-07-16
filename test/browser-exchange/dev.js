@@ -5,8 +5,8 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const browserify = require('browserify')
-const async = require ('async')
-
+const async = require('async')
+const mkdirp = require('mkdirp')
 
 const tasks = [
   browserifyLibs,
@@ -22,6 +22,10 @@ async.series(tasks, (err) => {
 
 function browserifyLibs (cb) {
   const tasks = [
+    (cb) => {
+      mkdirp.sync(path.join(__dirname, 'deps'))
+      cb(null)
+    },
     (cb) => {
       const eosLib = path.join(__dirname, 'deps', 'eosjs-dist.js')
       if (fs.existsSync(eosLib)) {
