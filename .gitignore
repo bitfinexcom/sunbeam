@@ -1,0 +1,14 @@
+node_modules
+.DS_Store
+npm-debug.log
+!config/*.json.example
+config/*.json
+!config/facs/*.json.example
+config/facs/*.json
+logs
+
+sunbeam-dist.js
+eosjs-dist.js
+deps
+
+app.js
