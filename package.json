@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "big.js": "^5.1.2",
-    "eosjs": "^15.0.1"
+    "eosjs": "^15.0.2"
   }
 }
