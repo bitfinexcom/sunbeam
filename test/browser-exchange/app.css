@@ -1,11 +1,13 @@
 .orderbook__internal {
   background: red;
   width: 70vw;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .orderbook__side {
-  display: inline-block;
-  width: 50%;
+  flex: 1 1 50%;
 }
 
 .rowI { /* because milgram overrides row */
@@ -14,15 +16,15 @@
 }
 
 .row__price{
-  flex: 1 1 33%; /* flexgrow, flexshrink, flexbasis */
+  flex: 1 1 45%; /* flexgrow, flexshrink, flexbasis */
 }
 
 .row__quantity {
-  flex: 1 1 33%;
+  flex: 1 1 45%;
 }
 
 .row__cancelbutton {
-  flex: 1 1 33%;
+  flex: 1 1 5%;
 }
 
 .orderbook__title-bids {

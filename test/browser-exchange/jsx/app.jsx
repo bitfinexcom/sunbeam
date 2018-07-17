@@ -154,7 +154,6 @@ class OrderbookSide extends Component {
             Quantity
           </div>
           <div className='row__cancelbutton'>
-            Cancel
           </div>
         </div>
         {
@@ -289,7 +288,6 @@ class PositionsInternal extends Component {
             Quantity
           </div>
           <div className='row__cancelbutton'>
-            Cancel
           </div>
         </div>
         <div className='positions__bids'>
