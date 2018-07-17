@@ -5,8 +5,8 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const browserify = require('browserify')
-const async = require ('async')
-
+const async = require('async')
+const mkdirp = require('mkdirp')
 
 const tasks = [
   browserifyLibs,
@@ -17,11 +17,14 @@ const tasks = [
 
 async.series(tasks, (err) => {
   if (err) throw err
-  cb(null)
 })
 
 function browserifyLibs (cb) {
   const tasks = [
+    (cb) => {
+      mkdirp.sync(path.join(__dirname, 'deps'))
+      cb(null)
+    },
     (cb) => {
       const eosLib = path.join(__dirname, 'deps', 'eosjs-dist.js')
       if (fs.existsSync(eosLib)) {
@@ -105,13 +108,13 @@ function serve () {
   app.use(
     express.static(__dirname, {
       index: [ 'index.html' ],
-      extensions: [ 'html' ],
+      extensions: [ 'html' ]
     })
   )
 
   app.use(
     '/app.css',
-    express.static(path.join( __dirname, 'app.css')),
+    express.static(path.join(__dirname, 'app.css'))
   )
 
   const port = 1337
