@@ -120,18 +120,27 @@ class OrderbookInternal extends Component {
     const sortedBids = bids.sort((a, b) => b.price - a.price)
     const sortedAsks = asks.sort((a, b) => a.price - b.price)
     return (
-
       <div className='orderbook__internal'>
-        <div className='orderbook__title'>
-          <h2 className='orderbook__title-bids'>
-            Bids
-          </h2>
-          <h2 className='orderbook__title-asks'>
-            Asks
-          </h2>
+        <div className='row orderbook__title'>
+          <div style="text-align: center" className='column column-40'>
+            <h2 className='orderbook__title-bids'>
+              Bids
+            </h2>
+          </div>
+           <div style="text-align: center" className='column column-40 column-offset-20'>
+            <h2 className='orderbook__title-asks'>
+              Asks
+            </h2>
+          </div>
         </div>
-        <OrderbookSide user={user} data={sortedBids} cancelcb={false} decimals={decimals} side='bids' />
-        <OrderbookSide user={user} data={sortedAsks} cancelcb={false} decimals={decimals} side='asks' />
+        <div className='row'>
+          <div className='column column-40'>
+            <OrderbookSide user={user} data={sortedBids} cancelcb={false} decimals={decimals} side='bids' />
+          </div>
+          <div className='column column-40 column-offset-20'>
+            <OrderbookSide user={user} data={sortedAsks} cancelcb={false} decimals={decimals} side='asks' />
+          </div>
+        </div>
       </div>
     )
   }
