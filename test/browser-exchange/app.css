@@ -1,0 +1,59 @@
+.orderbook__internal {
+  background: red;
+  width: 70vw;
+}
+
+.orderbook__side {
+  display: inline-block;
+  width: 50%;
+}
+
+.rowI { /* because milgram overrides row */
+  display: flex;
+  justify-content: space-around;
+}
+
+.row__price{
+  flex: 1 1 33%; /* flexgrow, flexshrink, flexbasis */
+}
+
+.row__quantity {
+  flex: 1 1 33%;
+}
+
+.row__cancelbutton {
+  flex: 1 1 33%;
+}
+
+.orderbook__title-bids {
+  width: 50%;
+  display: inline;
+  text-align: center;
+}
+
+.orderbook__title-asks {
+  width: 50%;
+  display: inline;
+  text-align: center;
+}
+
+.orderbook__title {
+  width: 100%;
+  display: flex;
+}
+
+.positions__internal {
+  width: 70vw
+}
+
+.positions__title {
+
+}
+
+.positions__bids > .rowI {
+  background: rgba(40, 200, 40, 0.3)
+}
+
+.positions__asks > .rowI {
+  background: rgba(200, 40, 40, 0.3)
+}
