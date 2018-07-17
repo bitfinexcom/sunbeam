@@ -117,6 +117,8 @@ class OrderbookInternal extends Component {
       return <ErrorBox error={error.message} />
     }
 
+    const sortedBids = bids.sort((a, b) => b.price-a.price)
+    const sortedAsks = asks.sort((a, b) => a.price-b.price)
     return (
       <div className='orderbook__internal'>
         <div className='orderbook__title'>
@@ -127,8 +129,8 @@ class OrderbookInternal extends Component {
             Asks
           </h1>
         </div>
-        <OrderbookSide data={bids} cancelcb={cancelcb} decimals={decimals} side='bids' />
-        <OrderbookSide data={asks} cancelcb={cancelcb} decimals={decimals} side='asks' />
+        <OrderbookSide data={sortedBids} cancelcb={cancelcb} decimals={decimals} side='bids' />
+        <OrderbookSide data={sortedAsks} cancelcb={cancelcb} decimals={decimals} side='asks' />
       </div>
     )
   }
