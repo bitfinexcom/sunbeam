@@ -189,7 +189,7 @@ sb.orders('BTCUSD', { user: 'testuser1234' }, (err, res) => {
 })
 ```
 
-### `sunbeam.cancel(trade, cb) => err, tx`
+### `sunbeam.cancel(trade, opts, cb) => err, tx`
   - `trade` (object)
     - `id`: the id that was assigned by the contract
     - `symbol` (string) symbol, e.g. `BTCUSD`
