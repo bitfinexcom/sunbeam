@@ -129,3 +129,9 @@ sb.withdraw({
 
   console.log(JSON.stringify(res, null, '  '))
 })
+
+sb.balance((err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+})

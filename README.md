@@ -250,3 +250,18 @@ $ cleos get currency balance efinextether testuser4321
 1000.0000000000 BTC
 0.6780000000 USD
 ```
+
+### `sunbeam.balance(cb) => err, balances`
+
+Returns the current wallet balance for the user.
+
+
+**Example:**
+
+```js
+sb.balance((err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+})
+```
