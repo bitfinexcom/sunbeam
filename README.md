@@ -212,3 +212,41 @@ sb.cancel({
   console.log(JSON.stringify(res, null, '  '))
 })
 ```
+
+### `sunbeam.withdraw(data, opts, cb) => err, tx`
+  - `data` (object)
+    - `amount`: the id that was assigned by the contract
+    - `symbol` (string) symbol, e.g. `BTCUSD`
+    - `to` (string) optional: address to withdrawal to (defaults to current account)
+
+  - `opts` (object)
+
+Withdraws tokens from the exchange.
+
+**Example:**
+
+```
+$ cleos get currency balance efinexchange testuser4321
+925.0500000000 BTC
+99999.9400000000 USD
+
+$ cleos get currency balance efinextether testuser4321
+1000.0000000000 BTC
+```
+
+```js
+sb.withdraw({
+  currency: 'BTCUSD',
+  amount: '0.678'
+}, {}, (err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+})
+```
+
+```
+$ cleos get currency balance efinextether testuser4321
+1000.0000000000 BTC
+0.6780000000 USD
+```

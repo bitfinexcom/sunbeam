@@ -120,3 +120,12 @@ sb.orders('BTCUSD', {}, (err, res) => {
     console.log(JSON.stringify(res, null, '  '))
   })
 })
+
+sb.withdraw({
+  currency: 'USD',
+  amount: '0.678'
+}, {}, (err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+})
