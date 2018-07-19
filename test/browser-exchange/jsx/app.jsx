@@ -11,7 +11,7 @@ const readNodeConf = {
 }
 
 const writeNodeConf = {
-  httpEndpoint: 'http://writenode.bitfinex.com:8888',
+  httpEndpoint: 'http://localhost:8888',
   keyProvider: [
     '5Kci5UR4h25CM4vCyQMTQy4pzMhqXZ8vnocYJJkm2eQb8cfHsWV'
   ]
@@ -22,7 +22,7 @@ const eos = {
   writeNodeConf
 }
 
-const sbConf = { account: 'testuser1234' }
+const sbConf = { dev: true, account: 'testuser1234' }
 let sb = new Sunbeam(eos, sbConf)
 
 class Clock extends Component {
