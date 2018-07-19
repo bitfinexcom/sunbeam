@@ -422,7 +422,7 @@ class App extends Component {
       error: null
     }
 
-    this.pairs = [ 'BTCUSD', 'ETHUSD' ]
+    this.pairs = [ 'BTCUSD' ]
   }
 
   onPairChange (event) {
