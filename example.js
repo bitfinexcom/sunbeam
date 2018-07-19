@@ -11,7 +11,7 @@ const readNodeConf = {
 }
 
 const writeNodeConf = {
-  httpEndpoint: 'http://writenode.bitfinex.com:8888',
+  httpEndpoint: 'http://localhost:8888', // 'http://writenode.example.com'
   keyProvider: [
     '5Kci5UR4h25CM4vCyQMTQy4pzMhqXZ8vnocYJJkm2eQb8cfHsWV'
   ]
@@ -22,7 +22,8 @@ const eos = {
   writeNodeConf
 }
 
-const opts = { account: 'testuser4321' }
+// dev: true allows one node for read and write
+const opts = { dev: true, account: 'testuser4321' }
 const sb = new Sunbeam(eos, opts)
 
 const order = sb.createOrder({

@@ -62,6 +62,7 @@ There are also browser demos available at [test/browser/](test/browser/).
   - `writeNodeConf` (object )config for write node
  - `opts` (object)
   - `account` (string) account name you want to use
+  - `dev` (boolean) don't check for seperate read/write node
 
 Creates a new Sunbeam instance. Currently you have to pass the eosjs library and config for a read and write node.
 
@@ -79,7 +80,7 @@ const readNodeConf = {
 }
 
 const writeNodeConf = {
-  httpEndpoint: 'http://writenode.bitfinex.com:8888',
+  httpEndpoint: 'http://writenode.example.com:8888',
   keyProvider: [
     '5Kci5UR4h25CM4vCyQMTQy4pzMhqXZ8vnocYJJkm2eQb8cfHsWV'
   ]
@@ -90,7 +91,7 @@ const eos = {
   writeNodeConf
 }
 
-const opts = { account: 'testuser4321' }
+const opts = { account: 'testuser4321', dev: false }
 const sb = new Sunbeam(eos, opts)
 ```
 
