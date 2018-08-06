@@ -5,7 +5,7 @@
 Start nodeos:
 
 ```
-nodeos --data-dir ~/eosdata/ --config-dir ~/eosdata/ --contracts-console --http-validate-host=false --verbose-http-error
+nodeos --access-control-allow-origin "*" --verbose-http-error --http-validate-host=false --enable-stale-production --producer-name eosio --plugin eosio::chain_api_plugin --plugin eosio::net_api_plugin
 ```
 
 `--contracts-console` will output the logging from custom contracts
