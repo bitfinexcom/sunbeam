@@ -22,7 +22,7 @@ const eos = {
   writeNodeConf
 }
 
-const sbConf = { dev: true, account: 'testuser1234' }
+const sbConf = { dev: true, account: 'testuser4321' }
 let sb = new Sunbeam(eos, sbConf)
 
 class Clock extends Component {
@@ -58,6 +58,14 @@ class Orderbook extends Component {
   componentDidMount () {
     const { symbol } = this.props
 
+    this.updateInterval(symbol)
+  }
+
+  updateInterval (symbol) {
+    if (this.periodicFetch) {
+      clearInterval(this.periodicFetch)
+    }
+
     this.periodicFetch = setInterval(() => {
       sb.orderbook(symbol, {}, (err, res) => {
         if (err) {
@@ -71,6 +79,14 @@ class Orderbook extends Component {
         })
       })
     }, 1000)
+  }
+
+  componentWillReceiveProps (props) {
+    if (this.props.symbol === props.symbol) {
+      return
+    }
+
+    this.updateInterval(props.symbol)
   }
 
   componentWillUnmount () {
@@ -245,6 +261,14 @@ class Positions extends Component {
   componentDidMount () {
     const { symbol } = this.props
 
+    this.updateInterval(symbol)
+  }
+
+  updateInterval (symbol) {
+    if (this.periodicFetch) {
+      clearInterval(this.periodicFetch)
+    }
+
     this.periodicFetch = setInterval(() => {
       sb.orders(symbol, {}, (err, res) => {
         if (err) {
@@ -258,6 +282,14 @@ class Positions extends Component {
         })
       })
     }, 1000)
+  }
+
+  componentWillReceiveProps (props) {
+    if (this.props.symbol === props.symbol) {
+      return
+    }
+
+    this.updateInterval(props.symbol)
   }
 
   componentWillUnmount () {
@@ -422,7 +454,10 @@ class App extends Component {
       error: null
     }
 
-    this.pairs = [ 'BTC.USD' ]
+    this.pairs = [
+      'BTC.USD',
+      'EOS.USD'
+    ]
   }
 
   onPairChange (event) {
