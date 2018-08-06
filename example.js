@@ -27,7 +27,7 @@ const opts = { dev: true, account: 'testuser4321' }
 const sb = new Sunbeam(eos, opts)
 
 const order = sb.createOrder({
-  symbol: 'BTCUSD',
+  symbol: 'BTC.USD',
   price: '2100',
   amount: '-14.99',
   type: 'EXCHANGE_LIMIT',
@@ -42,7 +42,7 @@ sb.place(order, (err, res) => {
 })
 
 const orderBuy = sb.createOrder({
-  symbol: 'BTCUSD',
+  symbol: 'BTC.USD',
   price: '0.1',
   amount: '0.1',
   type: 'EXCHANGE_LIMIT',
@@ -57,7 +57,7 @@ sb.place(orderBuy, (err, res) => {
 })
 
 // orderbook: bfx api v2 style (keyed)
-sb.orderbook('BTCUSD', { transform: true }, (err, res) => {
+sb.orderbook('BTC.USD', { transform: true }, (err, res) => {
   if (err) throw err
 
   console.log('orderbook: bfx api v2 style (keyed)')
@@ -65,7 +65,7 @@ sb.orderbook('BTCUSD', { transform: true }, (err, res) => {
 })
 
 // orderbook: raw
-sb.orderbook('BTCUSD', {}, (err, res) => {
+sb.orderbook('BTC.USD', {}, (err, res) => {
   if (err) throw err
 
   console.log('orderbook: raw')
@@ -73,7 +73,7 @@ sb.orderbook('BTCUSD', {}, (err, res) => {
 })
 
 // orders, default account', opts.account - testuser4321
-sb.orders('BTCUSD', {}, (err, res) => {
+sb.orders('BTC.USD', {}, (err, res) => {
   if (err) throw err
 
   console.log('orders, default account', opts.account)
@@ -81,21 +81,14 @@ sb.orders('BTCUSD', {}, (err, res) => {
 })
 
 // orders, testuser1234
-sb.orders('BTCUSD', { user: 'testuser1234' }, (err, res) => {
+sb.orders('BTC.USD', { user: 'testuser1234' }, (err, res) => {
   if (err) throw err
 
   console.log('orders, user testuser1234')
   console.log(JSON.stringify(res, null, '  '))
 })
 
-sb.orders('BTCUSD', {}, (err, res) => {
-  if (err) throw err
-
-  console.log('orders, user testuser4321')
-  console.log(JSON.stringify(res, null, '  '))
-})
-
-sb.orders('BTCUSD', {}, (err, res) => {
+sb.orders('BTC.USD', {}, (err, res) => {
   if (err) throw err
   let id
   let side
@@ -113,7 +106,7 @@ sb.orders('BTCUSD', {}, (err, res) => {
   console.log('cancelling order with id', id, 'side:', side)
   sb.cancel({
     id: id,
-    symbol: 'BTCUSD',
+    symbol: 'BTC.USD',
     side: side
   }, {}, (err, res) => {
     if (err) throw err
@@ -129,6 +122,9 @@ sb.withdraw({
   if (err) throw err
 
   console.log(JSON.stringify(res, null, '  '))
+  console.log(
+    `cleos get currency balance efinextether ${opts.account} USD`
+  )
 })
 
 sb.balance((err, res) => {
