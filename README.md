@@ -5,7 +5,7 @@
 Start nodeos:
 
 ```
-nodeos --data-dir ~/eosdata/ --config-dir ~/eosdata/ --contracts-console --http-validate-host=false
+nodeos --data-dir ~/eosdata/ --config-dir ~/eosdata/ --contracts-console --http-validate-host=false --verbose-http-error
 ```
 
 `--contracts-console` will output the logging from custom contracts
