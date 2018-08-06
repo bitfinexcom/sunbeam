@@ -418,11 +418,11 @@ class App extends Component {
     super(props)
 
     this.state = {
-      pair: 'BTCUSD',
+      pair: 'BTC.USD',
       error: null
     }
 
-    this.pairs = [ 'BTCUSD' ]
+    this.pairs = [ 'BTC.USD' ]
   }
 
   onPairChange (event) {
@@ -442,7 +442,7 @@ class App extends Component {
       price: state.price,
       amount: amnt,
       type: 'EXCHANGE_LIMIT',
-      postOnly: state.postonly
+      flags: state.postonly ? '1' : '0'
     })
 
     sb.place(order, (err, res) => {
