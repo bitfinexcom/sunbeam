@@ -101,12 +101,23 @@ const sb = new Sunbeam(eos, opts)
   - `price` (string) the sell/buy price, omit for `EXCHANGE_MARKET` orders
   - `amount` (string) the amount, set to negative value for selling
   - `type`  (string) the order type, supported are `EXCHANGE_LIMIT` and `EXCHANGE_MARKET`
-  - `postOnly` (boolean) optional: insert order only if there is no match (maker)
+  - `flags` (number) optional: define order flags
   - `clientId` (number) id to identify the id
 
 Creates an Order object for the eosfinex contract. Mimics the Bitfinex Api v2.
 
 For market orders, the price must be omitted.
+
+Available flags:
+
+```
+post only                       1
+ioc                             2
+release on trade               64
+sweep collateral              128
+```
+
+The summation of flags may result in multiple flags. The flag `3` means ioc post only.
 
 **Example:**
 
@@ -117,6 +128,19 @@ const order = sb.createOrder({
   amount: '-14.99',
   type: 'EXCHANGE_LIMIT',
   clientId: '123'
+})
+```
+
+**Example - post only + ioc flag set:**
+
+```js
+const order = sb.createOrder({
+  symbol: 'BTC.USD',
+  price: '2100',
+  amount: '-14.99',
+  type: 'EXCHANGE_LIMIT',
+  clientId: '123',
+  flags: '3'
 })
 ```
 

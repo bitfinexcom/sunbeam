@@ -56,11 +56,37 @@ sb.place(orderBuy, (err, res) => {
   console.log(JSON.stringify(res, null, '  '))
 })
 
-// orderbook: bfx api v2 style (keyed)
-sb.orderbook('BTC.USD', { transform: true }, (err, res) => {
+// -- post only flag set --
+const orderBuyPo = sb.createOrder({
+  symbol: 'BTC.USD',
+  price: '0.1',
+  amount: '0.1',
+  type: 'EXCHANGE_LIMIT',
+  clientId: '1337',
+  flags: '1'
+})
+
+sb.place(orderBuyPo, (err, res) => {
   if (err) throw err
 
-  console.log('orderbook: bfx api v2 style (keyed)')
+  console.log('placed "post only buy" order')
+  console.log(JSON.stringify(res, null, '  '))
+})
+
+// -- release on trade --
+const orderBuyR = sb.createOrder({
+  symbol: 'BTC.USD',
+  price: '0.1',
+  amount: '0.1',
+  type: 'EXCHANGE_LIMIT',
+  clientId: '999',
+  flags: '64'
+})
+
+sb.place(orderBuyR, (err, res) => {
+  if (err) throw err
+
+  console.log('placed "post only release on trade" order')
   console.log(JSON.stringify(res, null, '  '))
 })
 
@@ -69,6 +95,14 @@ sb.orderbook('BTC.USD', {}, (err, res) => {
   if (err) throw err
 
   console.log('orderbook: raw')
+  console.log(JSON.stringify(res, null, '  '))
+})
+
+// orderbook: bfx api v2 style (keyed)
+sb.orderbook('BTC.USD', { transform: true }, (err, res) => {
+  if (err) throw err
+
+  console.log('orderbook: bfx api v2 style (keyed)')
   console.log(JSON.stringify(res, null, '  '))
 })
 
