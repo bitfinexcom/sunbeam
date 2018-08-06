@@ -46,6 +46,7 @@ rm test/browser-exchange/eosjs-dist.js
 
 # start
 node test/browser-exchange/dev.js
+nodemon test/browser-exchange/dev.js -w test/browser-exchange/jsx/*.jsx
 ```
 
 
