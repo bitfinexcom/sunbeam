@@ -120,6 +120,9 @@ sweep collateral              128
 
 The summation of flags may result in multiple flags. The flag `3` means ioc post only.
 
+sweep collateral will automatically transfer funds out of the exchange upon an order cancel.
+release on trade will automatically transfer funds out of the exchange upon an order fill.
+
 **Example:**
 
 ```js
@@ -242,7 +245,7 @@ sb.cancel({
 ### `sunbeam.withdraw(data, opts, cb) => err, tx`
   - `data` (object)
     - `amount`: the id that was assigned by the contract
-    - `symbol` (string) symbol, e.g. `BTC.USD`
+    - `symbol` (string) symbol, e.g. `BTC`
     - `to` (string) optional: address to withdrawal to (defaults to current account)
 
   - `opts` (object)
@@ -262,7 +265,7 @@ $ cleos get currency balance efinextether testuser4321
 
 ```js
 sb.withdraw({
-  currency: 'BTC.USD',
+  currency: 'BTC',
   amount: '0.678'
 }, {}, (err, res) => {
   if (err) throw err
@@ -286,6 +289,27 @@ Returns the current wallet balance for the user.
 
 ```js
 sb.balance((err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+})
+```
+
+### `sunbeam.sweep(data, opts, cb) => err, tx`
+  - `data` (object)
+    - `symbol` (string) symbol, e.g. `BTC`
+    - `to` (string) optional: address to withdrawal to (defaults to current account)
+
+  - `opts` (object)
+
+Sweeps the whole balance for a token from the exchange to an account.
+
+**Example:**
+
+```js
+sb.sweep({
+  currency: 'USD'
+}, {}, (err, res) => {
   if (err) throw err
 
   console.log(JSON.stringify(res, null, '  '))

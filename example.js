@@ -166,3 +166,28 @@ sb.balance((err, res) => {
 
   console.log(JSON.stringify(res, null, '  '))
 })
+
+/*
+// Sweeping
+
+console.log(
+  `cleos get currency balance efinexchange ${opts.account} EOS`
+)
+console.log(
+  `cleos get currency balance efinextether ${opts.account} EOS`
+)
+
+sb.sweep({
+  currency: 'USD'
+}, {}, (err, res) => {
+  if (err) throw err
+
+  console.log(JSON.stringify(res, null, '  '))
+  console.log(
+    `cleos get currency balance efinextether ${opts.account} EOS`
+  )
+  console.log(
+    `cleos get currency balance efinexchange ${opts.account} EOS`
+  )
+})
+*/
