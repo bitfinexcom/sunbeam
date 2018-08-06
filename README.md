@@ -5,7 +5,7 @@
 Start nodeos:
 
 ```
-nodeos --data-dir ~/eosdata/ --config-dir ~/eosdata/ --contracts-console --http-validate-host=false
+nodeos --data-dir ~/eosdata/ --config-dir ~/eosdata/ --contracts-console --http-validate-host=false --verbose-http-error
 ```
 
 `--contracts-console` will output the logging from custom contracts
@@ -97,7 +97,7 @@ const sb = new Sunbeam(eos, opts)
 
 ### `sunbeam.createOrder(order) => Order`
  - `order` (object)
-  - `symbol` (string) the symbol, e.g. `BTCUSD`
+  - `symbol` (string) the symbol, e.g. `BTC.USD`
   - `price` (string) the sell/buy price, omit for `EXCHANGE_MARKET` orders
   - `amount` (string) the amount, set to negative value for selling
   - `type`  (string) the order type, supported are `EXCHANGE_LIMIT` and `EXCHANGE_MARKET`
@@ -112,7 +112,7 @@ For market orders, the price must be omitted.
 
 ```js
 const order = sb.createOrder({
-  symbol: 'BTCUSD',
+  symbol: 'BTC.USD',
   price: '2100',
   amount: '-14.99',
   type: 'EXCHANGE_LIMIT',
@@ -137,7 +137,7 @@ sb.place(order, (err, res) => {
 ```
 
 ### `sunbeam.orderbook(symbol, opts, cb) => err, orderbook`
-  - `symbol` (string) the symbol, e.g. `BTCUSD`
+  - `symbol` (string) the symbol, e.g. `BTC.USD`
   - `opts` (object)
     - `transform` (boolean) set true for an order book that is similar to the Bitfinex API v2
 
@@ -147,7 +147,7 @@ Retrieves the order book for a given symbol from the read node.
 
 ```js
 // orderbook: bfx api v2 style (keyed)
-sb.orderbook('BTCUSD', { transform: true }, (err, res) => {
+sb.orderbook('BTC.USD', { transform: true }, (err, res) => {
   if (err) throw err
 
   console.log('orderbook: bfx api v2 style (keyed)')
@@ -155,7 +155,7 @@ sb.orderbook('BTCUSD', { transform: true }, (err, res) => {
 })
 
 // orderbook: raw
-sb.orderbook('BTCUSD', {}, (err, res) => {
+sb.orderbook('BTC.USD', {}, (err, res) => {
   if (err) throw err
 
   console.log('orderbook: raw')
@@ -164,7 +164,7 @@ sb.orderbook('BTCUSD', {}, (err, res) => {
 ```
 
 ### `sunbeam.orders(symbol, opts, cb) => err, orderbook`
-  - `symbol` (string) the symbol, e.g. `BTCUSD`
+  - `symbol` (string) the symbol, e.g. `BTC.USD`
   - `opts` (object)
     - `account` (boolean) optional: use different account than from initial `new Sunbeam`
 
@@ -174,7 +174,7 @@ Retrieves the placed orders for an account.
 
 ```js
 // orders, uses account passed when Sunbeam instance was created
-sb.orders('BTCUSD', {}, (err, res) => {
+sb.orders('BTC.USD', {}, (err, res) => {
   if (err) throw err
 
   console.log('orders, default account', opts.account)
@@ -182,7 +182,7 @@ sb.orders('BTCUSD', {}, (err, res) => {
 })
 
 // orders, testuser1234
-sb.orders('BTCUSD', { user: 'testuser1234' }, (err, res) => {
+sb.orders('BTC.USD', { user: 'testuser1234' }, (err, res) => {
   if (err) throw err
 
   console.log('orders, user testuser1234')
@@ -193,7 +193,7 @@ sb.orders('BTCUSD', { user: 'testuser1234' }, (err, res) => {
 ### `sunbeam.cancel(trade, opts, cb) => err, tx`
   - `trade` (object)
     - `id`: the id that was assigned by the contract
-    - `symbol` (string) symbol, e.g. `BTCUSD`
+    - `symbol` (string) symbol, e.g. `BTC.USD`
     - `side` (string) possible values: `bid|ask`
 
   - `opts` (object)
@@ -205,7 +205,7 @@ Cancels and order. Requires the id assigned by the contract, which can be retire
 ```js
 sb.cancel({
   id: '1',
-  symbol: 'BTCUSD',
+  symbol: 'BTC.USD',
   side: 'ask'
 }, {}, (err, res) => {
   if (err) throw err
@@ -217,7 +217,7 @@ sb.cancel({
 ### `sunbeam.withdraw(data, opts, cb) => err, tx`
   - `data` (object)
     - `amount`: the id that was assigned by the contract
-    - `symbol` (string) symbol, e.g. `BTCUSD`
+    - `symbol` (string) symbol, e.g. `BTC.USD`
     - `to` (string) optional: address to withdrawal to (defaults to current account)
 
   - `opts` (object)
@@ -237,7 +237,7 @@ $ cleos get currency balance efinextether testuser4321
 
 ```js
 sb.withdraw({
-  currency: 'BTCUSD',
+  currency: 'BTC.USD',
   amount: '0.678'
 }, {}, (err, res) => {
   if (err) throw err
