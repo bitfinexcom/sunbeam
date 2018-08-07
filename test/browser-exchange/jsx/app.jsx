@@ -138,12 +138,12 @@ class OrderbookInternal extends Component {
     return (
       <div className='orderbook__internal'>
         <div className='row orderbook__title'>
-          <div style="text-align: center" className='column column-40'>
+          <div style='text-align: center' className='column column-40'>
             <h2 className='orderbook__title-bids'>
               Bids
             </h2>
           </div>
-           <div style="text-align: center" className='column column-40 column-offset-20'>
+          <div style='text-align: center' className='column column-40 column-offset-20'>
             <h2 className='orderbook__title-asks'>
               Asks
             </h2>
@@ -198,7 +198,7 @@ class OrderbookRow extends Component {
         id,
         account,
         price,
-        qty,
+        qty
         // type
       },
       cancelcb, // false for order book, function for positions
