@@ -17,7 +17,7 @@ class Server extends Wock {
     }
   }
 
-  handleChannel (msg) {
+  handleChannel (ws, msg) {
     let c = this.channels[msg.channel]
     if (!c) {
       c = {}
@@ -30,7 +30,11 @@ class Server extends Wock {
     }
 
     const send = (payload) => {
-      ws.send(JSON.stringify(payload))
+      try {
+        ws.send(JSON.stringify(payload))
+      } catch (e) {
+        ws.terminate()
+      }
     }
 
     simulateRandomOrder(msg.symbol, send)
@@ -78,7 +82,8 @@ function simulateEntry (pair, user, id, send) {
   }, lifetime)
 }
 
-const s = new Server({ port: 1338 })
+new Server({ port: 1338 })
+/*
 const WebSocket = require('ws')
 const ws = new WebSocket('ws://localhost:1338')
 
@@ -89,3 +94,4 @@ ws.on('open', () => {
 ws.on('message', (msg) => {
   console.log(msg)
 })
+*/
