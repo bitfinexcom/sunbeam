@@ -1,6 +1,18 @@
 # sunbeam
 
-## Setup
+## Examples
+
+### Node.js
+
+```
+node example-ws.js
+```
+
+## Websocket API
+
+You can see all API calls in [example-ws.js](example-ws.js).
+
+## Setup your node
 
 Start nodeos:
 
@@ -9,14 +21,6 @@ nodeos --access-control-allow-origin "*" --verbose-http-error --http-validate-ho
 ```
 
 `--contracts-console` will output the logging from custom contracts
-
-## Examples
-
-### Node.js
-
-```
-node example.js
-```
 
 ### Browsers
 
@@ -27,6 +31,9 @@ cd ~/eosdata/
 
 echo "access-control-allow-origin = *" >> config.ini
 ```
+
+
+## HTTP API demos (deprecated!)
 
 #### Testpage in Browser
 
@@ -50,9 +57,9 @@ nodemon test/browser-exchange/dev.js -w test/browser-exchange/jsx/*.jsx
 ```
 
 
-## API
+## HTTP API (deprecated!)
 
-You can see all API calls in [example.js](example.js).
+You can see all API calls in [example-http.js](example-http.js).
 
 There are also browser demos available at [test/browser/](test/browser/).
 

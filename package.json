@@ -11,6 +11,10 @@
     "bfx",
     "bitfinex"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitfinexcom/sunbeam.git"
+  },
   "author": "Robert <robert@bitfinex.com>",
   "license": "Apache-2.0",
   "devDependencies": {
@@ -29,12 +33,12 @@
     "mocha": "^5.2.0",
     "normalize.css": "^8.0.0",
     "preact": "^8.2.9",
-    "standard": "^11.0.1",
-    "ws": "^6.0.0"
+    "standard": "^11.0.1"
   },
   "dependencies": {
     "big.js": "^5.1.2",
     "eosjs": "^16.0.0",
-    "isomorphic-ws": "^4.0.1"
+    "isomorphic-ws": "^4.0.1",
+    "ws": "^6.0.0"
   }
 }

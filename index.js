@@ -1,6 +1,6 @@
 'use strict'
 
-const Sunbeam = require('./lib/sunbeam.js')
+const Sunbeam = require('./lib/sunbeam-ws.js')
 
 try {
   window.Sunbeam = Sunbeam
