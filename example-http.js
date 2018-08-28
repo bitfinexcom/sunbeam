@@ -1,6 +1,6 @@
 'use strict'
 
-const Sunbeam = require('./')
+const Sunbeam = require('./lib/sunbeam.js')
 const Eos = require('eosjs')
 
 const readNodeConf = {

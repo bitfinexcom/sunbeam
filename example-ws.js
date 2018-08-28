@@ -27,8 +27,12 @@ ws.on('error', (m) => {
 })
 
 ws.on('open', () => {
-  console.log('opened ws')
-  // ws.subscribeOrderBook('BTCUSD')
+  ws.onOrderBook({ symbol: 'BTC.USD' }, (ob) => {
+    console.log("ws.onOrderBook({ symbol: 'BTC.USD' }")
+    console.log(ob)
+  })
+
+  ws.subscribeOrderBook('BTC.USD')
 
   const order = {
     symbol: 'BTC.USD',
@@ -38,13 +42,17 @@ ws.on('open', () => {
     clientId: '1332'
   }
   ws.place(order)
-
-  console.log('placed order')
 })
 
-ws.onOrderBook({ symbol: 'BTCUSD' }, (ob) => {
-  console.log('ob')
-  console.log(ob)
-})
+setTimeout(() => {
+  const order = {
+    symbol: 'BTC.USD',
+    price: '2300',
+    amount: '-14.99',
+    type: 'EXCHANGE_LIMIT',
+    clientId: '1332'
+  }
+  ws.place(order)
+}, 6000)
 
 ws.open()
