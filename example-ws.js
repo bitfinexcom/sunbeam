@@ -31,11 +31,22 @@ ws.on('error', (m) => {
 
 ws.on('open', () => {
   ws.onOrderBook({ symbol: 'BTC.USD' }, (ob) => {
-    console.log("ws.onOrderBook({ symbol: 'BTC.USD' }")
+    console.log('ws.onOrderBook({ symbol: "BTC.USD" }')
     console.log(ob)
   })
 
+  ws.onWalletUpdate({}, (wu) => {
+    console.log('ws.onWalletUpdate')
+    console.log(wu)
+  })
+
+  ws.onWalletSnapshot({}, (ws) => {
+    console.log('ws.onWalletSnapshot')
+    console.log(ws)
+  })
+
   ws.subscribeOrderBook('BTC.USD')
+  ws.subscribeWallet()
 
   const order = {
     symbol: 'BTC.USD',
