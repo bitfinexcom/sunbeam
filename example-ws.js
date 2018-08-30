@@ -35,14 +35,9 @@ ws.on('open', () => {
     console.log(ob)
   })
 
-  ws.onWalletUpdate({}, (wu) => {
+  ws.onWallet({}, (wu) => {
     console.log('ws.onWalletUpdate')
     console.log(wu)
-  })
-
-  ws.onWalletSnapshot({}, (ws) => {
-    console.log('ws.onWalletSnapshot')
-    console.log(ws)
   })
 
   ws.onManagedWalletUpdate({}, (mw) => {
@@ -50,13 +45,13 @@ ws.on('open', () => {
     console.log(mw)
   })
 
+  // opt-in to wallet updates
+  ws.subscribeWallet()
+
   ws.subscribeOrderBook('BTC.USD')
 
   // subscribe to private order updates
   ws.auth()
-
-  // opt-in to wallet updates
-  ws.subscribeWallet()
 
   const order = {
     symbol: 'BTC.USD',
