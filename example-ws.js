@@ -46,6 +46,11 @@ ws.on('open', () => {
   })
 
   ws.subscribeOrderBook('BTC.USD')
+
+  // subscribe to private order updates
+  ws.auth()
+
+  // opt-in to wallet updates
   ws.subscribeWallet()
 
   const order = {
