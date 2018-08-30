@@ -45,6 +45,11 @@ ws.on('open', () => {
     console.log(ws)
   })
 
+  ws.onManagedWalletUpdate({}, (mw) => {
+    console.log('ws.onManagedWalletUpdate')
+    console.log(mw)
+  })
+
   ws.subscribeOrderBook('BTC.USD')
 
   // subscribe to private order updates
