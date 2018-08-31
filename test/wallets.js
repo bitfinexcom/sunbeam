@@ -84,4 +84,79 @@ describe('wallet helper', () => {
       [ 'exchange', 'EOS', 9600000000 ]
     ], w.getState())
   })
+
+  it('supports decimals transforms, initial snap', () => {
+    const w = new Wallet({ decimals: 8 })
+    const snap = [
+      [ 'exchange', 'USD', 9700000000 ],
+      [ 'exchange', 'ETH', 10000000000 ]
+    ]
+
+    w.update(snap)
+
+    assert.deepEqual([
+      [ 'exchange', 'USD', 97 ],
+      [ 'exchange', 'ETH', 100 ]
+    ], w.getState())
+  })
+
+  it('supports decimals transforms, update message append', () => {
+    const w = new Wallet({ decimals: 8 })
+    const snap = [
+      [ 'exchange', 'USD', 9700000000 ],
+      [ 'exchange', 'ETH', 10000000000 ]
+    ]
+
+    w.update(snap)
+
+    w.update([ 'exchange', 'EOS', 9900000000 ])
+
+    assert.deepEqual([
+      [ 'exchange', 'USD', 97 ],
+      [ 'exchange', 'ETH', 100 ],
+      [ 'exchange', 'EOS', 99 ]
+    ], w.getState())
+  })
+
+  it('supports decimals transforms, update entry replace', () => {
+    const w = new Wallet({ decimals: 8 })
+    const snap = [
+      [ 'exchange', 'USD', 9700000000 ],
+      [ 'exchange', 'ETH', 10000000000 ]
+    ]
+
+    w.update(snap)
+
+    w.update([ 'exchange', 'ETH', 9900000000 ])
+
+    assert.deepEqual([
+      [ 'exchange', 'USD', 97 ],
+      [ 'exchange', 'ETH', 99 ]
+    ], w.getState())
+  })
+
+  it('parse() calls do not affect internal state', () => {
+    const w = new Wallet({ decimals: 8 })
+    const snap = [
+      [ 'exchange', 'USD', 9700000000 ],
+      [ 'exchange', 'ETH', 9900000000 ]
+    ]
+
+    w.update(snap)
+    const u = [ 'exchange', 'ETH', 7000000000 ]
+
+    w.parse(u)
+
+    assert.deepEqual([
+      [ 'exchange', 'USD', 97 ],
+      [ 'exchange', 'ETH', 99 ]
+    ], w.getState())
+
+    w.update(u)
+
+    assert.deepEqual([
+      [ 'exchange', 'USD', 97 ],
+      [ 'exchange', 'ETH', 70 ]
+    ], w.getState())
+  })
 })
