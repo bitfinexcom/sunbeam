@@ -4,8 +4,17 @@
 
 ### Node.js
 
+Websocket client:
+
 ```
 node example-ws.js
+```
+
+Managed State Helper:
+
+```
+node example-wallet.js
+node example-orderbook.js
 ```
 
 ## Websocket API
