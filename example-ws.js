@@ -45,6 +45,11 @@ ws.on('open', () => {
     console.log(mw)
   })
 
+  ws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
+    console.log('ws.onManagedOrderbookUpdate({ symbol: "BTC.USD" }')
+    console.log(ob)
+  })
+
   // opt-in to wallet updates
   ws.subscribeWallet()
 
