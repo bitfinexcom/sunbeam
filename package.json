@@ -2,9 +2,10 @@
   "name": "sunbeam",
   "version": "1.0.0",
   "description": "JS lib for eosfinex",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard && mocha",
+    "prepare": "node build.js"
   },
   "keywords": [
     "eos",
