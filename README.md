@@ -1,5 +1,11 @@
 # sunbeam
 
+## Import into Browsers
+
+```js
+const Sunbeam = require('sunbeam/dist')
+```
+
 ## Examples
 
 ### Node.js
