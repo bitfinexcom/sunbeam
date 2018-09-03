@@ -2,10 +2,12 @@
   "name": "sunbeam",
   "version": "1.0.0",
   "description": "JS lib for eosfinex",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "standard && mocha",
-    "prepare": "node build.js"
+    "prepare": "npm run setup-build && npm run babelify",
+    "setup-build": "rm -rf dist && mkdir -p dist",
+    "babelify": "browserify -s Sunbeam lib/index.js -o dist/index.js -t [ babelify --presets [ @babel/preset-env ] ]"
   },
   "keywords": [
     "eos",
@@ -19,11 +21,13 @@
   "author": "Robert <robert@bitfinex.com>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.51",
-    "@babel/plugin-transform-react-jsx": "^7.0.0-beta.53",
-    "@babel/preset-env": "^7.0.0-beta.51",
-    "@babel/preset-react": "^7.0.0-beta.53",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "async": "^2.6.1",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
     "babelify": "^9.0.0",
     "browserify": "^16.2.2",
     "debug": "^3.1.0",
@@ -37,6 +41,8 @@
     "standard": "^11.0.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
     "big.js": "^5.1.2",
     "eosjs": "^16.0.0",
     "isomorphic-ws": "^4.0.1",
