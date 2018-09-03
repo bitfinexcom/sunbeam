@@ -70,6 +70,8 @@ ws.on('open', () => {
 })
 
 setTimeout(() => {
+  ws.unSubscribeOrderBook('BTC.USD')
+
   const order = {
     symbol: 'BTC.USD',
     price: '2300',
