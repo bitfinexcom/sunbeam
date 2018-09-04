@@ -71,6 +71,7 @@ ws.on('open', () => {
 
 setTimeout(() => {
   ws.unSubscribeOrderBook('BTC.USD')
+  ws.unSubscribeWallet()
 
   const order = {
     symbol: 'BTC.USD',
