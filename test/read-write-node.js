@@ -2,7 +2,7 @@
 
 'use strict'
 
-const Sunbeam = require('../index.js')
+const Sunbeam = require('../lib/index-legacy.js')
 const assert = require('assert')
 const Eos = require('eosjs')
 
