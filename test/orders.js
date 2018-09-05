@@ -30,16 +30,6 @@ describe('order helper', () => {
     assert.equal(bid.parse().amount, '9900')
   })
 
-  it('no price for market orders', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_MARKET'
-    }, conf)
-
-    assert.equal(ask.parse().price, '0')
-  })
-
   it('client id is timestamp by default', () => {
     const ask = new Order({
       symbol: 'BTC.USD',
@@ -51,5 +41,69 @@ describe('order helper', () => {
     ask.parse()
 
     assert.ok(ask.serialize().clId >= d)
+  })
+
+  it('market order sets flags', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_MARKET'
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 4)
+  })
+
+  it('market order flag set respects existing flags', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_MARKET',
+      flags: 1 // post only
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 5)
+  })
+
+  it('market order flag works with order type market order', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_MARKET',
+      flags: 4
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 4)
+  })
+
+  it('post only flag works', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_LIMIT',
+      flags: 1
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 1)
+  })
+
+  it('price must be always present', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_MARKET',
+      flags: 1
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().price, '0')
   })
 })
