@@ -9,11 +9,11 @@ const {
   // simulate msg from api - snapshot
   const msg1 = [ '0',
     'ws',
-    [ [ 'exchange', 'USD', 46940000000 ],
-      [ 'exchange', 'ETH', 10000000000 ],
-      [ 'exchange', 'EUR', 10000000000 ],
-      [ 'exchange', 'EOS', 10000000000 ],
-      [ 'exchange', 'BTC', 9900000000 ] ] ]
+    [ [ 'exchange', 'USD', 46940000000, 46940000000, null ],
+      [ 'exchange', 'ETH', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EUR', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EOS', 10000000000, 10000000000, null ],
+      [ 'exchange', 'BTC', 9900000000, 9900000000, null ] ] ]
 
   const snap = msg1[2]
   const w = new Wallet()
@@ -38,11 +38,11 @@ const {
   // simulate msg from api - snapshot
   const msg1 = [ '0',
     'ws',
-    [ [ 'exchange', 'USD', 46940000000 ],
-      [ 'exchange', 'ETH', 10000000000 ],
-      [ 'exchange', 'EUR', 10000000000 ],
-      [ 'exchange', 'EOS', 10000000000 ],
-      [ 'exchange', 'BTC', 9900000000 ] ] ]
+    [ [ 'exchange', 'USD', 46940000000, 46940000000, null ],
+      [ 'exchange', 'ETH', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EUR', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EOS', 10000000000, 10000000000, null ],
+      [ 'exchange', 'BTC', 9900000000, 9900000000, null ] ] ]
 
   const snap = msg1[2]
   const w = new Wallet({ decimals: 8 })
@@ -67,11 +67,11 @@ const {
   // simulate msg from api - snapshot
   const msg1 = [ '0',
     'ws',
-    [ [ 'exchange', 'USD', 46940000000 ],
-      [ 'exchange', 'ETH', 10000000000 ],
-      [ 'exchange', 'EUR', 10000000000 ],
-      [ 'exchange', 'EOS', 10000000000 ],
-      [ 'exchange', 'BTC', 9900000000 ] ] ]
+    [ [ 'exchange', 'USD', 46940000000, 46940000000, null ],
+      [ 'exchange', 'ETH', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EUR', 10000000000, 10000000000, null ],
+      [ 'exchange', 'EOS', 10000000000, 10000000000, null ],
+      [ 'exchange', 'BTC', 9900000000, 9900000000, null ] ] ]
 
   const snap = msg1[2]
   const w = new Wallet({ decimals: 8 })
