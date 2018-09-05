@@ -73,6 +73,11 @@ setTimeout(() => {
   ws.unSubscribeOrderBook('BTC.USD')
   ws.unSubscribeWallet()
 
+  ws.cancel({
+    symbol: 'BTC.USD',
+    id: '1'
+  })
+
   const order = {
     symbol: 'BTC.USD',
     price: '2300',
