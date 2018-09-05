@@ -51,6 +51,23 @@ ws.on('open', () => {
     console.log(ob)
   })
 
+  // emits all updates
+  ws.onOrderUpdate({}, (data) => {
+    console.log('ws.onOrderUpdate({}')
+    console.log(data)
+  })
+
+  // filter enabled
+  ws.onOrderUpdate({ symbol: 'BTC.USD' }, (data) => {
+    console.log('ws.onOrderUpdate({ symbol: "BTC.USD" }')
+    console.log(data)
+  })
+
+  ws.onOrderUpdate({ symbol: 'ETH.USD' }, (data) => {
+    console.log('ws.onOrderUpdate({ symbol: "ETH.USD" }')
+    console.log(data)
+  })
+
   // opt-in to wallet updates
   ws.subscribeWallet()
 
