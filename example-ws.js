@@ -14,8 +14,8 @@ const conf = {
     account: ''
   },
   transform: {
-    orderbook: { keyed: true, decimals: 4 },
-    wallet: { decimals: 8 }
+    orderbook: { keyed: true },
+    wallet: {}
   }
 }
 
