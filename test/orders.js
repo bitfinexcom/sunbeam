@@ -4,11 +4,8 @@
 
 const Order = require('../lib/order.js')
 const assert = require('assert')
-const Eos = require('eosjs')
 
-const conf = {
-  Eos: Eos
-}
+const conf = {}
 
 describe('order helper', () => {
   it('sets bid and ask scope', () => {
@@ -20,7 +17,7 @@ describe('order helper', () => {
     }, conf)
 
     assert.equal(ask.parse().scope, 'btc.usd.a')
-    assert.equal(ask.parse().amount, '0.9900000000')
+    assert.equal(ask.parse().amount, '9900')
 
     const bid = new Order({
       symbol: 'BTC.USD',
@@ -30,7 +27,7 @@ describe('order helper', () => {
     }, conf)
 
     assert.equal(bid.parse().scope, 'btc.usd.b')
-    assert.equal(bid.parse().amount, '0.9900000000')
+    assert.equal(bid.parse().amount, '9900')
   })
 
   it('no price for market orders', () => {
