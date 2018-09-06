@@ -106,4 +106,18 @@ describe('order helper', () => {
 
     assert.equal(ask.serialize().price, '0')
   })
+
+  it('prices and amounts float32 issue', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '0.678',
+      price: '0.678',
+      type: 'EXCHANGE_LIMIT'
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().price, '6780')
+    assert.equal(ask.serialize().qty, '6780')
+  })
 })
