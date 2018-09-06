@@ -23,7 +23,7 @@ const eos = {
 }
 
 // dev: true allows one node for read and write
-const opts = { dev: true, account: 'testuser4321' }
+const opts = { dev: true, account: 'testuser1554', permission: '@active' }
 const sb = new Sunbeam(eos, opts)
 
 const order = sb.createOrder({

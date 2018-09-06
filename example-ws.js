@@ -11,7 +11,8 @@ const conf = {
 
     httpEndpoint: '', // used to get metadata for signing transactions
     keyProvider: [''],
-    account: ''
+    account: '',
+    permission: '@active'
   },
   transform: {
     orderbook: { keyed: true },
