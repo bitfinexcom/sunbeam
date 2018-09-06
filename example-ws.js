@@ -69,6 +69,11 @@ ws.on('open', () => {
     console.log(data)
   })
 
+  ws.onManagedOrdersUpdate({}, (orders) => {
+    console.log('ws.onManagedOrdersUpdate')
+    console.log(orders)
+  })
+
   // opt-in to wallet updates
   ws.subscribeWallet()
 
