@@ -26,7 +26,7 @@ describe('wallet helper', () => {
 
     w.setSnapshot(snap)
 
-    w.applyUpdate(['exchange', 'ETH', 93.994, 0, null ])
+    w.applyUpdate([ 'exchange', 'ETH', 93.994, 0, null ])
 
     assert.deepEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
@@ -42,7 +42,7 @@ describe('wallet helper', () => {
     ]
 
     w.setSnapshot(snap)
-    w.applyUpdate(['trade', 'EOS', 99, 0, null ])
+    w.applyUpdate([ 'trade', 'EOS', 99, 0, null ])
 
     assert.deepEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
@@ -59,7 +59,7 @@ describe('wallet helper', () => {
     ]
 
     w.setSnapshot(snap)
-    w.applyUpdate(['exchange', 'EOS', 99, 0, null ])
+    w.applyUpdate([ 'exchange', 'EOS', 99, 0, null ])
 
     assert.deepEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
@@ -77,7 +77,7 @@ describe('wallet helper', () => {
 
     w.update(snap)
 
-    w.update(['exchange', 'EOS', 99, 0, null ])
+    w.update([ 'exchange', 'EOS', 99, 0, null ])
 
     assert.deepEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
@@ -89,7 +89,7 @@ describe('wallet helper', () => {
   it('supports decimals transforms, initial snap', () => {
     const w = new Wallet({ decimals: 8 })
     const snap = [
-      [ 'exchange', 'USD', 9700000000, 0,  9700000000 ],
+      [ 'exchange', 'USD', 9700000000, 0, 9700000000 ],
       [ 'exchange', 'ETH', 10000000000, 0, 10000000000 ]
     ]
 
@@ -104,7 +104,7 @@ describe('wallet helper', () => {
   it('supports decimals transforms, update message append', () => {
     const w = new Wallet({ decimals: 8 })
     const snap = [
-      [ 'exchange', 'USD', 9700000000, 0,  9700000000 ],
+      [ 'exchange', 'USD', 9700000000, 0, 9700000000 ],
       [ 'exchange', 'ETH', 10000000000, 0, 10000000000 ]
     ]
 
@@ -122,7 +122,7 @@ describe('wallet helper', () => {
   it('supports decimals transforms, update entry replace', () => {
     const w = new Wallet({ decimals: 8 })
     const snap = [
-      [ 'exchange', 'USD', 9700000000, 0,  9700000000 ],
+      [ 'exchange', 'USD', 9700000000, 0, 9700000000 ],
       [ 'exchange', 'ETH', 10000000000, 0, 10000000000 ]
     ]
 
@@ -139,7 +139,7 @@ describe('wallet helper', () => {
   it('parse() calls do not affect internal state', () => {
     const w = new Wallet({ decimals: 8 })
     const snap = [
-      [ 'exchange', 'USD', 9700000000, 0,  9700000000 ],
+      [ 'exchange', 'USD', 9700000000, 0, 9700000000 ],
       [ 'exchange', 'ETH', 10000000000, 0, 10000000000 ]
     ]
 
