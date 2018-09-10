@@ -69,6 +69,11 @@ ws.on('open', () => {
     console.log(data)
   })
 
+  ws.onTradeUpdate({}, (update) => {
+    console.log('ws.onTradeUpdate({}')
+    console.log(update)
+  })
+
   ws.onManagedOrdersUpdate({}, (orders) => {
     console.log('ws.onManagedOrdersUpdate')
     console.log(orders)
