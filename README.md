@@ -10,17 +10,31 @@ const Sunbeam = require('sunbeam/dist')
 
 ### Node.js
 
-Websocket client:
+Example of the Websocket client usage: [example-ws.js](example-ws.js)
 
+
+Run with:
 ```
 node example-ws.js
 ```
 
 Managed State Helper:
 
+Sunbeam can take care of managing state snapshots for you, and keeps them up to date when the API sends updates. The state helpers can also be used as standalone components. They are also integrated into the main Websocket client, and are accessed by the `onManaged[]StateUpdate` [handlers you can register](https://github.com/bitfinexcom/sunbeam/blob/37b44247a2a7d6be51fa65f58e75e0eb8c48de74/example-ws.js#L45).
+
+
+| Component  | Example for standalone usage |
+| --- | --- |
+| Wallet  |  [example-wallet.js](example-wallet.js)  |
+| Orderbook  | [example-orderbook.js](example-orderbook.js)  |
+| Orders | [example-orders.js](example-orders.js) |
+
+
+Run with:
 ```
 node example-wallet.js
 node example-orderbook.js
+node example-orders.js
 ```
 
 ## Websocket API
