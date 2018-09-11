@@ -149,4 +149,87 @@ describe('orders helper', () => {
     o.update(ou)
     assert.deepEqual(o.getState(), [ snap[0], snap[1], ou ])
   })
+
+  it('supports keyed format, snaps', () => {
+    const o = new Orders({ keyed: true })
+    const snap = snapMsg[2]
+    o.update(snap)
+
+    const exp = {
+      id: '18446744073709551615',
+      clientId: 12345,
+      symbol: 'BTC.USD',
+      amount: 0.9,
+      origAmount: 1,
+      type: 'LIMIT',
+      status: 'PARTIALLY FILLED',
+      price: 1
+    }
+
+    assert.deepEqual(o.getState()[0], exp)
+  })
+
+  it('supports keyed format, new order', () => {
+    const o = new Orders({ keyed: true })
+    const snap = snapMsg[2]
+    o.update(snap)
+
+    const on = onMsg[2]
+    o.update(on)
+
+    assert.equal(o.getState().length, 3)
+    const exp = {
+      'id': '1',
+      'clientId': 1234578910,
+      'symbol': 'BTC.USD',
+      'amount': -1,
+      'origAmount': -1,
+      'type': 'LIMIT',
+      'status': 'ACTIVE',
+      'price': 500
+    }
+
+    assert.deepEqual(o.getState()[2], exp)
+  })
+
+  it('supports keyed format, update', () => {
+    const o = new Orders({ keyed: true })
+    const snap = snapMsg[2]
+    o.update(snap)
+
+    const on = onMsg[2]
+    o.update(on)
+
+    assert.equal(o.getState().length, 3)
+    const exp = {
+      'id': '1',
+      'clientId': 1234578910,
+      'symbol': 'BTC.USD',
+      'amount': -1,
+      'origAmount': -1,
+      'type': 'LIMIT',
+      'status': 'ACTIVE',
+      'price': 500
+    }
+
+    assert.deepEqual(o.getState()[2], exp)
+
+    // update
+    const ou = ouMsg[2]
+    o.update(ou)
+
+    const expUpdt = {
+      'id': '1',
+      'clientId': 1234578910,
+      'symbol': 'BTC.USD',
+      'amount': -10,
+      'origAmount': -10,
+      'type': 'LIMIT',
+      'status': 'ACTIVE',
+      'price': 500
+    }
+
+    assert.deepEqual(o.getState()[2], expUpdt)
+    assert.equal(o.getState().length, 3)
+  })
 })
