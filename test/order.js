@@ -147,4 +147,29 @@ describe('order helper', () => {
 
     assert.equal(ask.serialize().price, '0')
   })
+
+  it('EXCHANGE_IOC order sets flags', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_IOC'
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 2)
+  })
+
+  it('EXCHANGE_IOC order sets flags, collision with market order', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_IOC',
+      flags: 4
+    }, conf)
+
+    assert.throws(() => {
+      ask.parse()
+    }, { message: /overload/ })
+  })
 })
