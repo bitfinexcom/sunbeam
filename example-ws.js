@@ -98,6 +98,14 @@ ws.on('open', () => {
 })
 
 setTimeout(() => {
+  console.log('------------ws.getState()')
+
+  console.log(ws.getManagedStateComponent('wallet'))
+  console.log('orders')
+  console.log(ws.getManagedStateComponent('orders'))
+  console.log('books')
+  console.log(ws.getManagedStateComponent('books', 'BTC.USD'))
+
   ws.unSubscribeOrderBook('BTC.USD')
   ws.unSubscribeWallet()
 
