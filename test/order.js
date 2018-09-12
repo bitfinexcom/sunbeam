@@ -94,6 +94,47 @@ describe('order helper', () => {
     assert.equal(ask.serialize().flags, 1)
   })
 
+  it('post only via prop supported', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_LIMIT',
+      postOnly: true
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 1)
+  })
+
+  it('post only via prop + flag is ok', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_LIMIT',
+      postOnly: true,
+      flags: 5 // 1 + 4
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 5)
+  })
+
+  it('postOnly prop overrides flag', () => {
+    const ask = new Order({
+      symbol: 'BTC.USD',
+      amount: '-0.99',
+      type: 'EXCHANGE_LIMIT',
+      postOnly: true,
+      flags: 0
+    }, conf)
+
+    ask.parse()
+
+    assert.equal(ask.serialize().flags, 1)
+  })
+
   it('price must be always present', () => {
     const ask = new Order({
       symbol: 'BTC.USD',
