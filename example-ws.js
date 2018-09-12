@@ -16,7 +16,8 @@ const conf = {
   },
   transform: {
     orderbook: { keyed: true },
-    wallet: {}
+    wallet: {},
+    orders: { keyed: true }
   }
 }
 
