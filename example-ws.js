@@ -88,6 +88,7 @@ ws.on('open', () => {
   // subscribe to private order updates
   ws.auth()
 
+  // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
   const order = {
     symbol: 'BTC.USD',
     price: '2300',
