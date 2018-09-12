@@ -109,6 +109,7 @@ setTimeout(() => {
 
   ws.unSubscribeOrderBook('BTC.USD')
   ws.unSubscribeWallet()
+  ws.unSubscribeOrders()
 
   ws.cancel({
     symbol: 'BTC.USD',
