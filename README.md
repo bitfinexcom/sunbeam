@@ -221,6 +221,26 @@ ws.cancel({
 
 The request will be signed locally using the `eosjs` module.
 
+#### sunbeam.withdraw(data)
+
+- `data`
+  - `currency <String>` The currency to withdraw, e.g. `BTC`
+  - `amount <String>` The amount to withdraw
+  - `to <String> (optional)` The account to withdraw to.
+
+Withdraws tokens to a specified account.
+Defaults to account passed in constructor, `opts.eos.account`.
+
+
+*Example:*
+
+```js
+ws.withdraw({
+  currency: 'EUR',
+  amount: '0.678'
+})
+```
+
 #### `sunbeam.subscribeOrderBook(pair)`
   - `pair <String>` The pair, i.e. `BTC.USD`
 
