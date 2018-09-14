@@ -200,6 +200,12 @@ The request will be signed locally using the `eosjs` module.
 
 #### `sunbeam.cancel(data)`
 
+  - `data`
+    - `symbol <String>` The pair, i.e. `BTC.USD`
+    - `side <String>` `bid` or `ask`
+    - `id <String>` The id returned from the contract on placement
+    - `clientId <String>` The unique id assigned by the client
+
 Cancels an order.
 
 *Example:*
