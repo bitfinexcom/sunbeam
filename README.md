@@ -228,7 +228,9 @@ The request will be signed locally using the `eosjs` module.
   - `amount <String>` The amount to withdraw
   - `to <String> (optional)` The account to withdraw to.
 
-Withdraws tokens to a specified account.
+Withdraws tokens to a specified account. The account must be the same as
+the account used with EOSfinex.
+
 Defaults to account passed in constructor, `opts.eos.account`.
 
 
@@ -240,6 +242,32 @@ ws.withdraw({
   amount: '0.678'
 })
 ```
+
+The request will be signed locally using the `eosjs` module.
+
+#### `sunbeam.sweep(data)`
+
+- `data`
+  - `currency <String>` The currency to withdraw, e.g. `BTC`
+  - `to <String> (optional)` The account to withdraw to.
+
+Sweeps tokens to a specified account. The account must be the same as
+the account used with EOSfinex.
+
+Defaults to account passed in constructor, `opts.eos.account`.
+
+*Example:*
+
+```js
+ws.sweep({
+  currency: 'EUR'
+})
+
+// on success we receive a wallet update:
+// [ '0', 'wu', [ 'exchange', 'EUR', 0, 0, null ] ]
+```
+
+The request will be signed locally using the `eosjs` module.
 
 #### `sunbeam.subscribeOrderBook(pair)`
   - `pair <String>` The pair, i.e. `BTC.USD`
