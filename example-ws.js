@@ -126,6 +126,12 @@ setTimeout(() => {
     clientId: '1536867193329'
   })
 
+  /*
+  ws.sweep({
+    currency: 'EUR'
+  })
+  */
+
   const order = {
     symbol: 'BTC.USD',
     price: '2300',
