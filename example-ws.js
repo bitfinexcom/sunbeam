@@ -85,6 +85,13 @@ ws.on('open', () => {
 
   ws.subscribeOrderBook('BTC.USD')
 
+  // public trade data
+  ws.onTrades({ symbol: 'ETH.USD' }, (data) => {
+    console.log('ws.onTrades({ symbol: "ETH.USD" }')
+    console.log(data)
+  })
+  ws.subscribeTrades('ETH.USD')
+
   // subscribe to private order updates
   ws.auth()
 
