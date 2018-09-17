@@ -221,7 +221,7 @@ ws.cancel({
 
 The request will be signed locally using the `eosjs` module.
 
-#### sunbeam.withdraw(data)
+#### `sunbeam.withdraw(data)`
 
 - `data`
   - `currency <String>` The currency to withdraw, e.g. `BTC`
@@ -260,6 +260,17 @@ ws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
 })
 
 ws.subscribeOrderBook('BTC.USD')
+```
+
+#### `sunbeam.subscribeTrades(pair)`
+  - `pair <String>` The pair, i.e. `BTC.USD`
+
+Unsubscribe from orderbook updates for a pair.
+
+*Example:*
+
+```js
+ws.subscribeTrades('BTC.USD')
 ```
 
 #### `sunbeam.unSubscribeOrderBook(pair)`
@@ -406,6 +417,24 @@ ws.auth()
 ```
 
 Registered for `tu`, `te` messages via channel `0`.
+
+#### `sunbeam.onTrades(opts, handler)`
+  - `opts <Object>`
+    - `symbol <String>` The symbol to emit the public trade updates for, i.e. `BTC.USD`
+  - `handler <Function>` The callback called for every update
+
+*Example:*
+
+```js
+ws.onTrades({ symbol: 'ETH.USD' }, (data) => {
+  console.log('ws.onTrades({ symbol: "ETH.USD" }')
+  console.log(data) // emits [ 'ETH.USD', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
+})
+
+ws.subscribeTrades('ETH.USD')
+```
+
+Registered for `tu`, `te` messages via the corresponding channel for the symbol.
 
 
 #### `sunbeam.onOrderBook(opts, handler)`
