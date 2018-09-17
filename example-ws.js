@@ -121,7 +121,7 @@ setTimeout(() => {
 
   ws.cancel({
     symbol: 'BTC.USD',
-    side: 'bids',
+    side: 'bid',
     id: '18446744073709551612',
     clientId: '1536867193329'
   })
