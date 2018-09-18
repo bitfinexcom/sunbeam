@@ -130,6 +130,11 @@ setTimeout(() => {
   ws.sweep({
     currency: 'EUR'
   })
+
+  ws.deposit({
+    currency: 'EUR',
+    amount: '2'
+  })
   */
 
   const order = {

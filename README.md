@@ -265,6 +265,30 @@ ws.sweep({
 
 // on success we receive a wallet update:
 // [ '0', 'wu', [ 'exchange', 'EUR', 0, 0, null ] ]
+
+// and the amount is transferred back to the deposit contract:
+$ ./cleos get currency balance efinextether testuser1431
+100.00000000 EUR
+```
+
+#### `sunbeam.deposit(data)`
+  - `data`
+    - `currency <String>` The currency to deposit, e.g. `BTC`
+    - `amount <String>` The amount to deposit
+
+Takes your user account, defined in `opts.eos.account`, and deposits the desired amount
+to the exchange using the tether token contract.
+
+*Example:*
+
+```js
+ws.deposit({
+  currency: 'EUR',
+  amount: '2'
+})
+
+// success:
+// [ '0', 'wu', [ 'exchange', 'EUR', 2, 0, null ] ]
 ```
 
 The request will be signed locally using the `eosjs` module.
