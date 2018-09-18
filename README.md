@@ -32,7 +32,10 @@ You can see all API calls in [example-ws.js](example-ws.js).
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
       - `Eos <Class>` The official eosjs client Class from `require('eosjs')`
-      - `httpEndpoint <String>` an Eos node HTTP endpoint, used to get metadata for signing transactions
+      - `httpEndpoint <String>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options. omit when you pass the abi via options
+      - `abis <Object> (optional)` eosfinex contract abis, so no initial http request is required to get the contract abi and httpEndpoint can be omitted
+        - `exchange <Object>` Exchange abi
+        - `token <Object>` Token contract abi
       - `keyProvider <String>` your key, used to sign transactions
       - `account <String>` accountname to use for the key
       - `permission <String>` permission level to use for the account
@@ -51,7 +54,8 @@ const opts = {
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,
-    httpEndpoint: 'https://eosnode.example.com:8888', // used to get metadata for signing transactions
+    httpEndpoint: 'https://eosnode.example.com:8888',
+    abis: null, // fetched via http from eos node if null
     keyProvider: [''], // your key, used to sign transactions
     account: '', //
     permission: '@active'
@@ -66,6 +70,9 @@ const opts = {
 const ws = new Sunbeam(opts)
 ws.open()
 ```
+
+For an example how to prefetch the contract abis to avoid the initial
+HTTP request to an eos node, see [example-prefetched-abi-ws.js](example-prefetched-abi-ws.js).
 
 ### Events emitted
 
