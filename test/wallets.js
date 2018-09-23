@@ -14,7 +14,7 @@ describe('wallet helper', () => {
     ]
     w.setSnapshot(snap)
 
-    assert.deepEqual(snap, w.getState())
+    assert.deepStrictEqual(snap, w.getState())
   })
 
   it('applies updates to snapshots', () => {
@@ -28,7 +28,7 @@ describe('wallet helper', () => {
 
     w.applyUpdate([ 'exchange', 'ETH', 93.994, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
       [ 'exchange', 'ETH', 93.994, 0, 93.994 ]
     ], w.getState())
@@ -44,7 +44,7 @@ describe('wallet helper', () => {
     w.setSnapshot(snap)
     w.applyUpdate([ 'trade', 'EOS', 99, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
       [ 'exchange', 'ETH', 100, 0, 100 ],
       [ 'trade', 'EOS', 99, 0, 99 ]
@@ -61,7 +61,7 @@ describe('wallet helper', () => {
     w.setSnapshot(snap)
     w.applyUpdate([ 'exchange', 'EOS', 99, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
       [ 'exchange', 'ETH', 100, 0, 100 ],
       [ 'exchange', 'EOS', 99, 0, 99 ]
@@ -79,7 +79,7 @@ describe('wallet helper', () => {
 
     w.update([ 'exchange', 'EOS', 99, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 98.999, 0, 98.999 ],
       [ 'exchange', 'ETH', 100, 0, 100 ],
       [ 'exchange', 'EOS', 99, 0, 99 ]
@@ -95,7 +95,7 @@ describe('wallet helper', () => {
 
     w.update(snap)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 97, 0, 97 ],
       [ 'exchange', 'ETH', 100, 0, 100 ]
     ], w.getState())
@@ -112,7 +112,7 @@ describe('wallet helper', () => {
 
     w.update([ 'exchange', 'EOS', 9900000000, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 97, 0, 97 ],
       [ 'exchange', 'ETH', 100, 0, 100 ],
       [ 'exchange', 'EOS', 99, 0, 99 ]
@@ -130,7 +130,7 @@ describe('wallet helper', () => {
 
     w.update([ 'exchange', 'ETH', 9900000000, 0, null ])
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 97, 0, 97 ],
       [ 'exchange', 'ETH', 99, 0, 99 ]
     ], w.getState())
@@ -148,14 +148,14 @@ describe('wallet helper', () => {
 
     w.parse(u)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 97, 0, 97 ],
       [ 'exchange', 'ETH', 100, 0, 100 ]
     ], w.getState())
 
     w.update(u)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ 'exchange', 'USD', 97, 0, 97 ],
       [ 'exchange', 'ETH', 70, 0, 70 ]
     ], w.getState())

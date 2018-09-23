@@ -16,7 +16,7 @@ describe('orderbook helper', () => {
 
     o.setSnapshot(snap)
 
-    assert.deepEqual(snap, o.getState())
+    assert.deepStrictEqual(snap, o.getState())
   })
 
   it('applies decimal transforms', () => {
@@ -29,7 +29,7 @@ describe('orderbook helper', () => {
 
     o.setSnapshot(snap)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ '18446744073709551615', 500, 1 ],
       [ '1', 501, -1.2 ],
       [ '2', 501, -1.2 ]
@@ -63,7 +63,7 @@ describe('orderbook helper', () => {
       }]
     }
 
-    assert.deepEqual(exp, o.getState())
+    assert.deepStrictEqual(exp, o.getState())
   })
 
   it('deletes entries from raw snaps', () => {
@@ -82,7 +82,7 @@ describe('orderbook helper', () => {
     const update = [ '18446744073709551614', 0, 0 ]
     o.applyUpdate(update)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ '18446744073709551615', 5000000, 10000 ],
       [ '1', 5010000, -12000 ],
       [ '2', 5010000, -12000 ],
@@ -123,7 +123,7 @@ describe('orderbook helper', () => {
       }]
     }
 
-    assert.deepEqual(exp, o.getState())
+    assert.deepStrictEqual(exp, o.getState())
   })
 
   it('adds entries to raw snaps', () => {
@@ -139,7 +139,7 @@ describe('orderbook helper', () => {
     const update = [ '4', 10000, 10000 ]
     o.applyUpdate(update)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ '18446744073709551615', 5000000, 10000 ],
       [ '3', 5010000, -12000 ],
       [ '4', 10000, 10000 ]
@@ -183,7 +183,7 @@ describe('orderbook helper', () => {
       }]
     }
 
-    assert.deepEqual(exp, o.getState())
+    assert.deepStrictEqual(exp, o.getState())
   })
 
   it('adds entries to keyed snaps, bids', () => {
@@ -223,7 +223,7 @@ describe('orderbook helper', () => {
       }]
     }
 
-    assert.deepEqual(exp, o.getState())
+    assert.deepStrictEqual(exp, o.getState())
   })
 
   it('added entries have decimals conversion', () => {
@@ -263,7 +263,7 @@ describe('orderbook helper', () => {
       }]
     }
 
-    assert.deepEqual(exp, o.getState())
+    assert.deepStrictEqual(exp, o.getState())
   })
 
   it('handles empty order books', () => {
@@ -271,7 +271,7 @@ describe('orderbook helper', () => {
 
     o.update([]) // [ 'BTC.USD', [] ]
 
-    assert.deepEqual([], o.getState())
+    assert.deepStrictEqual([], o.getState())
   })
 
   it('detects snapshots and updates', () => {
@@ -284,12 +284,12 @@ describe('orderbook helper', () => {
 
     o.update(snap)
 
-    assert.deepEqual(snap, o.getState())
+    assert.deepStrictEqual(snap, o.getState())
 
     const update = [ '4', 10000, 10000 ]
     o.update(update)
 
-    assert.deepEqual([
+    assert.deepStrictEqual([
       [ '18446744073709551615', 5000000, 10000 ],
       [ '1', 5010000, -12000 ],
       [ '2', 5010000, -12000 ],
@@ -305,10 +305,10 @@ describe('orderbook helper', () => {
       [ '2', 5010000, -12000 ]
     ]
 
-    assert.deepEqual(snap, o.parse(snap))
+    assert.deepStrictEqual(snap, o.parse(snap))
 
     const update = [ '4', 10000, 10000 ]
-    assert.deepEqual(update, o.parse(update))
+    assert.deepStrictEqual(update, o.parse(update))
     o.parse(update)
   })
 })

@@ -87,7 +87,7 @@ describe('managed state - sub unsub, state stays nice', () => {
       }
 
       if (count === 0) {
-        assert.deepEqual(ob, snap)
+        assert.deepStrictEqual(ob, snap)
         count++
         sws.unSubscribeOrderBook('BTC.USD')
       }
