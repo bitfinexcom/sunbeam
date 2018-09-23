@@ -16,8 +16,8 @@ describe('order helper', () => {
       type: 'EXCHANGE_LIMIT'
     }, conf)
 
-    assert.equal(ask.parse().scope, 'btc.usd.a')
-    assert.equal(ask.parse().amount, '9900')
+    assert.strictEqual(ask.parse().scope, 'btc.usd.a')
+    assert.strictEqual(ask.parse().amount, '9900')
 
     const bid = new Order({
       symbol: 'BTC.USD',
@@ -26,8 +26,8 @@ describe('order helper', () => {
       type: 'EXCHANGE_LIMIT'
     }, conf)
 
-    assert.equal(bid.parse().scope, 'btc.usd.b')
-    assert.equal(bid.parse().amount, '9900')
+    assert.strictEqual(bid.parse().scope, 'btc.usd.b')
+    assert.strictEqual(bid.parse().amount, '9900')
   })
 
   it('client id is timestamp by default', () => {
@@ -52,7 +52,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 4)
+    assert.strictEqual(ask.serialize().flags, 4)
   })
 
   it('market order flag set respects existing flags', () => {
@@ -65,7 +65,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 5)
+    assert.strictEqual(ask.serialize().flags, 5)
   })
 
   it('market order flag works with order type market order', () => {
@@ -78,7 +78,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 4)
+    assert.strictEqual(ask.serialize().flags, 4)
   })
 
   it('post only flag works', () => {
@@ -91,7 +91,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 1)
+    assert.strictEqual(ask.serialize().flags, 1)
   })
 
   it('post only via prop supported', () => {
@@ -104,7 +104,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 1)
+    assert.strictEqual(ask.serialize().flags, 1)
   })
 
   it('post only via prop + flag is ok', () => {
@@ -118,7 +118,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 5)
+    assert.strictEqual(ask.serialize().flags, 5)
   })
 
   it('postOnly prop overrides flag', () => {
@@ -132,7 +132,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 1)
+    assert.strictEqual(ask.serialize().flags, 1)
   })
 
   it('price must be always present', () => {
@@ -145,7 +145,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().price, '0')
+    assert.strictEqual(ask.serialize().price, '0')
   })
 
   it('EXCHANGE_IOC order sets flags', () => {
@@ -157,7 +157,7 @@ describe('order helper', () => {
 
     ask.parse()
 
-    assert.equal(ask.serialize().flags, 2)
+    assert.strictEqual(ask.serialize().flags, 2)
   })
 
   it('EXCHANGE_IOC order sets flags, collision with market order', () => {

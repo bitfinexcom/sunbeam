@@ -99,8 +99,8 @@ describe('orders helper', () => {
     const snap = snapMsg[2]
     o.update(snap)
 
-    assert.equal('18446744073709551615', o.getState()[0][0])
-    assert.deepEqual(o.getState(), snap)
+    assert.strictEqual('18446744073709551615', o.getState()[0][0])
+    assert.deepStrictEqual(o.getState(), snap)
   })
 
   it('takes empty snapshots', () => {
@@ -109,7 +109,7 @@ describe('orders helper', () => {
     const snap = emptySnapMsg[2]
     o.update(snap)
 
-    assert.deepEqual(o.getState(), [])
+    assert.deepStrictEqual(o.getState(), [])
   })
 
   it('update respect pair as ids can be same across pairs', () => {
@@ -120,7 +120,7 @@ describe('orders helper', () => {
     const oc = ocMsg[2]
     o.update(oc)
 
-    assert.deepEqual(o.getState(), [ oc, snap[1] ])
+    assert.deepStrictEqual(o.getState(), [ oc, snap[1] ])
   })
 
   it('update on - new order', () => {
@@ -131,7 +131,7 @@ describe('orders helper', () => {
     const on = onMsg[2]
     o.update(on)
 
-    assert.deepEqual(o.getState(), [ snap[0], snap[1], on ])
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], on ])
   })
 
   it('update ou', () => {
@@ -142,12 +142,12 @@ describe('orders helper', () => {
     // add order
     const on = onMsg[2]
     o.update(on)
-    assert.deepEqual(o.getState(), [ snap[0], snap[1], on ])
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], on ])
 
     // update it
     const ou = ouMsg[2]
     o.update(ou)
-    assert.deepEqual(o.getState(), [ snap[0], snap[1], ou ])
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], ou ])
   })
 
   it('supports keyed format, snaps', () => {
@@ -166,7 +166,7 @@ describe('orders helper', () => {
       price: 1
     }
 
-    assert.deepEqual(o.getState()[0], exp)
+    assert.deepStrictEqual(o.getState()[0], exp)
   })
 
   it('supports keyed format, new order', () => {
@@ -177,7 +177,7 @@ describe('orders helper', () => {
     const on = onMsg[2]
     o.update(on)
 
-    assert.equal(o.getState().length, 3)
+    assert.strictEqual(o.getState().length, 3)
     const exp = {
       'id': '1',
       'clientId': 1234578910,
@@ -189,7 +189,7 @@ describe('orders helper', () => {
       'price': 500
     }
 
-    assert.deepEqual(o.getState()[2], exp)
+    assert.deepStrictEqual(o.getState()[2], exp)
   })
 
   it('supports keyed format, update', () => {
@@ -200,7 +200,7 @@ describe('orders helper', () => {
     const on = onMsg[2]
     o.update(on)
 
-    assert.equal(o.getState().length, 3)
+    assert.strictEqual(o.getState().length, 3)
     const exp = {
       'id': '1',
       'clientId': 1234578910,
@@ -212,7 +212,7 @@ describe('orders helper', () => {
       'price': 500
     }
 
-    assert.deepEqual(o.getState()[2], exp)
+    assert.deepStrictEqual(o.getState()[2], exp)
 
     // update
     const ou = ouMsg[2]
@@ -229,7 +229,7 @@ describe('orders helper', () => {
       'price': 500
     }
 
-    assert.deepEqual(o.getState()[2], expUpdt)
-    assert.equal(o.getState().length, 3)
+    assert.deepStrictEqual(o.getState()[2], expUpdt)
+    assert.strictEqual(o.getState().length, 3)
   })
 })
