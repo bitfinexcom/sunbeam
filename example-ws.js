@@ -70,29 +70,26 @@ ws.on('open', () => {
     console.log(data)
   })
 
-  ws.onTradeUpdate({}, (update) => {
-    console.log('ws.onTradeUpdate({}')
-    console.log(update)
+  ws.onPrivateTradeUpdate({}, (data) => {
+    console.log('ws.onPrivateTradeUpdate({} ')
+    console.log('private trade', data) // emits [ 'ETH.USD', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
   })
+
+  ws.onPublicTradeUpdate({ symbol: 'IQX.USD' }, (data) => {
+    console.log('ws.onPublicTradeUpdate({} ')
+    console.log('public trade', data)
+  })
+
+  ws.subscribePublicTrades('IQX.USD')
 
   ws.onManagedOrdersUpdate({}, (orders) => {
     console.log('ws.onManagedOrdersUpdate')
     console.log(orders)
   })
 
-  // opt-in to wallet updates
-  ws.subscribeWallet()
-
   ws.subscribeOrderBook('BTC.USD')
 
-  // public trade data
-  ws.onTrades({ symbol: 'ETH.USD' }, (data) => {
-    console.log('ws.onTrades({ symbol: "ETH.USD" }')
-    console.log(data)
-  })
-  ws.subscribeTrades('ETH.USD')
-
-  // subscribe to private order updates
+  // subscribe to private order updates, wallet updates and trade updates
   ws.auth()
 
   // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
