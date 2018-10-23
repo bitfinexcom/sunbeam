@@ -36,9 +36,14 @@ You can see all API calls in [example-ws.js](example-ws.js).
       - `abis <Object> (optional)` eosfinex contract abis, so no initial http request is required to get the contract abi and httpEndpoint can be omitted
         - `exchange <Object>` Exchange abi
         - `token <Object>` Token contract abi
-      - `keyProvider <String>` your key, used to sign transactions
-      - `account <String>` accountname to use for the key
-      - `permission <String>` permission level to use for the account
+      - `auth` Auth options
+        - `keys` use default signing
+          - `keyProvider <String>` your key, used to sign transactions
+          - `account <String>` accountname to use for the key
+          - `permission <String>` permission level to use for the account
+        - `scatter <Object>` Scatter options if scatter is used for signing
+          - `appName <String>` App name showed to Scatter user
+          - `ScatterJS <Object>` Scatter instance
     - `transform <Object>` Options passed to state components
       - `orderbook <Object>`
         - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
@@ -56,9 +61,15 @@ const opts = {
     Eos: Eos,
     httpEndpoint: 'https://eosnode.example.com:8888',
     abis: null, // fetched via http from eos node if null
-    keyProvider: [''], // your key, used to sign transactions
-    account: '', //
-    permission: '@active'
+
+    auth: {
+      keys: {
+        keyProvider: [''], // your key, used to sign transactions
+        account: '', // accountname to use
+        permission: '@active'
+      },
+      scatter: null
+    }
   },
   transform: {
     orderbook: { keyed: true },
@@ -73,6 +84,8 @@ ws.open()
 
 For an example how to prefetch the contract abis to avoid the initial
 HTTP request to an eos node, see [example-prefetched-abi-ws.js](example-prefetched-abi-ws.js).
+
+For an example how to use Scatter for auth, see [example-scatter.js](example-scatter.js).
 
 ### Events emitted
 
@@ -141,14 +154,25 @@ Closes the connection to eosfinex.
 ws.close()
 ```
 
-#### `sunbeam.auth()`
+#### `sunbeam.auth() => Promise`
 
 Takes the account name you have defined when creating a Sunbeam instance with
 `opts.eos.account` and sends it to the server. Your private key stays local.
 
+If you configured auth via scatter, it will connect to scatter. Remember to remove
+any global references to ScatterJS **and any global references to Sunbeam**:
+
+```js
+window.ScatterJS = null;
+```
+
 Subscribes you to `wallet`, `trade` and `order` updates for the specified account.
 
-#### `sunbeam.place(order)`
+#### `sunbeam.logoutScatter() => Promise`
+
+Forgets scatter identity (if scatter is used for auth).
+
+#### `sunbeam.place(order) => Promise`
   - `order <Object>`
     - `symbol <String>` Token pair to trade for
     - `amount <String>` Amount to buy/sell
@@ -205,7 +229,7 @@ ws.place(order)
 
 The request will be signed locally using the `eosjs` module.
 
-#### `sunbeam.cancel(data)`
+#### `sunbeam.cancel(data) => Promise`
 
   - `data`
     - `symbol <String>` The pair, i.e. `BTC.USD`
@@ -228,7 +252,7 @@ ws.cancel({
 
 The request will be signed locally using the `eosjs` module.
 
-#### `sunbeam.withdraw(data)`
+#### `sunbeam.withdraw(data) => Promise`
 
 - `data`
   - `currency <String>` The currency to withdraw, e.g. `BTC`
@@ -252,7 +276,7 @@ ws.withdraw({
 
 The request will be signed locally using the `eosjs` module.
 
-#### `sunbeam.sweep(data)`
+#### `sunbeam.sweep(data) => Promise`
 
 - `data`
   - `currency <String>` The currency to withdraw, e.g. `BTC`
@@ -278,7 +302,7 @@ $ ./cleos get currency balance efinextether testuser1431
 100.00000000 EUR
 ```
 
-#### `sunbeam.deposit(data)`
+#### `sunbeam.deposit(data) => Promise`
   - `data`
     - `currency <String>` The currency to deposit, e.g. `BTC`
     - `amount <String>` The amount to deposit

@@ -4,15 +4,19 @@ const Sunbeam = require('./lib/sunbeam-ws.js')
 const Eos = require('eosjs')
 
 const conf = {
-  url: '',
+  url: 'wss://eosnode-withws.example.com',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,
-
-    httpEndpoint: '', // used to get metadata for signing transactions
-    keyProvider: [''],
-    account: '',
-    permission: '@active'
+    httpEndpoint: 'http://eosnode.example.com:8888', // used to get metadata for signing transactions
+    auth: {
+      keys: {
+        keyProvider: [''],
+        account: '',
+        permission: '@active'
+      },
+      scatter: null
+    }
   },
   transform: {
     orderbook: { keyed: true },
