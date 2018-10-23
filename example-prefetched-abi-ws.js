@@ -19,9 +19,14 @@ const eos = Eos({
       expireInSeconds: 60 * 60, // 1 hour,
       Eos: Eos,
       httpEndpoint: 'http://eosnode.example.com:8888', // used to get metadata for signing transactions
-      keyProvider: [''],
-      account: '',
-      permission: '@active',
+      auth: {
+        keys: {
+          keyProvider: [''],
+          account: '',
+          permission: '@active'
+        },
+        scatter: null
+      },
       abis: {
         exchange: efinexchangeAbi.abi,
         token: efinextetherAbi.abi
