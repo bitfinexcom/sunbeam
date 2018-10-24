@@ -1,11 +1,7 @@
 'use strict'
 
-const Sunbeam = require('./lib/sunbeam-ws.js')
+const Sunbeam = require('.')
 const Eos = require('eosjs')
-
-// https://github.com/GetScatter/scatter-js/issues/47
-const Websocket = require('isomorphic-ws')
-global.WebSocket = Websocket
 
 let ScatterJS = require('scatterjs-core')
 if (ScatterJS.default) {
