@@ -47,5 +47,8 @@
   "browserslist": [
     "IE 11",
     "Safari 11"
-  ]
+  ],
+  "browser": {
+    "url": false
+  }
 }
