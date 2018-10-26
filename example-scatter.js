@@ -75,6 +75,8 @@ ws.on('open', async () => {
     clientId: '1540306547501022'
   })
 
+  console.log(payload, data)
+
 /*
   ws.deposit({
     currency: 'EOS',
