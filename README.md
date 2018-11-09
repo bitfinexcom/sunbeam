@@ -32,7 +32,9 @@ You can see all API calls in [example-ws.js](example-ws.js).
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
       - `Eos <Class>` The official eosjs client Class from `require('eosjs')`
-      - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options. omit when you pass the abi via options
+      - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
+      - `tokenContract <String|null>` name of the used token contract, defaults to `eosio.token`
+      - `exchangeContract <String|null>` name of the used exchange contract, defaults to `efinexchange`
       - `abis <Object> (optional)` eosfinex contract abis, so no initial http request is required to get the contract abi and httpEndpoint can be omitted
         - `exchange <Object>` Exchange abi
         - `token <Object>` Token contract abi
