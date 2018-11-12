@@ -5,6 +5,7 @@ const Eos = require('eosjs')
 
 const conf = {
   url: 'wss://eosnode-withws.example.com',
+  moonbeam: 'http://127.0.0.1:8181',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,
@@ -105,6 +106,9 @@ ws.on('open', () => {
     clientId: '1332'
   }
   ws.place(order)
+
+  const history = await ws.requestHistory()
+  console.log(history.res)
 })
 
 setTimeout(() => {
