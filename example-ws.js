@@ -107,8 +107,10 @@ ws.on('open', () => {
   }
   ws.place(order)
 
-  const history = await ws.requestHistory()
-  console.log(history.res)
+  const history = ws.requestHistory().then((history) => {
+    console.log(history.res)
+  })
+
 })
 
 setTimeout(() => {
