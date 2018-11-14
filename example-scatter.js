@@ -19,6 +19,7 @@ ScatterJS.plugins(new ScatterEOS())
 
 const conf = {
   url: 'wss://eosnode-withws.example.com',
+  moonbeam: 'http://127.0.0.1:8181',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,

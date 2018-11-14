@@ -29,6 +29,7 @@ You can see all API calls in [example-ws.js](example-ws.js).
 ### `new Sunbeam(opts) => sunbeam`
   - `opts <Object>`
     - `url <String>` Address of the websocket eosfinex node
+    - `moonbeam <String>` optional HTTP server to retrieve historical data
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
       - `Eos <Class>` The official eosjs client Class from `require('eosjs')`
@@ -379,7 +380,7 @@ Subscribes to a websocket channel.
 *Example:*
 
 ```js
-this.subscribe('wallets', { account: 'testuser1431' })
+ws.subscribe('wallets', { account: 'testuser1431' })
 ```
 
 #### `sunbeam.unsubscribe(channel, ?opts)`
@@ -391,7 +392,19 @@ Unsubscribes from a channel.
 *Example:*
 
 ```js
-this.unsubscribe('wallets', { account: 'testuser1431' })
+ws.unsubscribe('wallets', { account: 'testuser1431' })
+```
+
+#### `sunbeam.requestHistory() => Promise`
+
+Sends a verification transaction to a moonbeam server
+to receive the trading history.
+
+*Example:*
+
+```js
+const history = await ws.requestHistory()
+console.log(history)
 ```
 
 ### Managed State Updates
