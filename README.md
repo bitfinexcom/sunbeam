@@ -160,7 +160,11 @@ ws.close()
 #### `sunbeam.auth() => Promise`
 
 Takes the account name you have defined when creating a Sunbeam instance with
-`opts.eos.account` and sends it to the server. Your private key stays local.
+`opts.eos.account`. Your private key stays local.
+
+It will sign a verification transaction that is send to the Websocket endpoint
+for validation. This transaction is not applied to the chain, just used for
+verifying the signature.
 
 If you configured auth via scatter, it will connect to scatter. Remember to remove
 any global references to ScatterJS **and any global references to Sunbeam**:
