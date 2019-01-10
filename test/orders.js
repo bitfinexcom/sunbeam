@@ -97,7 +97,7 @@ describe('orders helper', () => {
     const o = new Orders()
 
     const snap = snapMsg[2]
-    o.update(snap)
+    o.update(snapMsg)
 
     assert.strictEqual('18446744073709551615', o.getState()[0][0])
     assert.deepStrictEqual(o.getState(), snap)
@@ -106,54 +106,46 @@ describe('orders helper', () => {
   it('takes empty snapshots', () => {
     const o = new Orders()
 
-    const snap = emptySnapMsg[2]
-    o.update(snap)
+    o.update(emptySnapMsg)
 
     assert.deepStrictEqual(o.getState(), [])
   })
 
   it('update respect pair as ids can be same across pairs', () => {
     const o = new Orders()
+    o.update(snapMsg)
+    o.update(ocMsg)
+
     const snap = snapMsg[2]
-    o.update(snap)
-
-    const oc = ocMsg[2]
-    o.update(oc)
-
-    assert.deepStrictEqual(o.getState(), [ oc, snap[1] ])
+    assert.deepStrictEqual(o.getState(), [ ocMsg[2], snap[1] ])
   })
 
   it('update on - new order', () => {
     const o = new Orders()
+    o.update(snapMsg)
+    o.update(onMsg)
+
     const snap = snapMsg[2]
-    o.update(snap)
-
-    const on = onMsg[2]
-    o.update(on)
-
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], on ])
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
   })
 
   it('update ou', () => {
     const o = new Orders()
-    const snap = snapMsg[2]
-    o.update(snap)
+    o.update(snapMsg)
 
+    const snap = snapMsg[2]
     // add order
-    const on = onMsg[2]
-    o.update(on)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], on ])
+    o.update(onMsg)
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
 
     // update it
-    const ou = ouMsg[2]
-    o.update(ou)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], ou ])
+    o.update(ouMsg)
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], ouMsg[2] ])
   })
 
   it('supports keyed format, snaps', () => {
     const o = new Orders({ keyed: true })
-    const snap = snapMsg[2]
-    o.update(snap)
+    o.update(snapMsg)
 
     const exp = {
       id: '18446744073709551615',
@@ -171,10 +163,9 @@ describe('orders helper', () => {
 
   it('supports keyed format, new order', () => {
     const o = new Orders({ keyed: true })
-    const snap = snapMsg[2]
-    o.update(snap)
+    o.update(snapMsg)
 
-    const on = onMsg[2]
+    const on = onMsg
     o.update(on)
 
     assert.strictEqual(o.getState().length, 3)
@@ -194,11 +185,8 @@ describe('orders helper', () => {
 
   it('supports keyed format, update', () => {
     const o = new Orders({ keyed: true })
-    const snap = snapMsg[2]
-    o.update(snap)
-
-    const on = onMsg[2]
-    o.update(on)
+    o.update(snapMsg)
+    o.update(onMsg)
 
     assert.strictEqual(o.getState().length, 3)
     const exp = {
@@ -215,8 +203,7 @@ describe('orders helper', () => {
     assert.deepStrictEqual(o.getState()[2], exp)
 
     // update
-    const ou = ouMsg[2]
-    o.update(ou)
+    o.update(ouMsg)
 
     const expUpdt = {
       'id': '1',
