@@ -334,7 +334,7 @@ The request will be signed locally using the `eosjs` module.
 #### `sunbeam.subscribeOrderBook(pair)`
   - `pair <String>` The pair, i.e. `BTC.USD`
 
-Subscribe to orderbook updates for a pair.
+Subscribe to orderbook updates for a pair. The format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
 
 *Example:*
 
@@ -425,6 +425,8 @@ For every update, the full updated data is emitted.
   - `opts <Object>`
     - `symbol <String>` The symbol to emit the orderbook update for, i.e. `BTC.USD`
   - `handler <Function>` Called every time the state is updated
+
+The input format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
 
 If you want to manage state on your own, our just need a stream of updates, use
 the `onOrderBook` handler.
