@@ -8,11 +8,11 @@ const {
   console.log('==== example wallet, managed state ====')
   // simulate msg from api - snapshot
   const msg1 = [ '0',
-  'ws',
-  [ [ 'exchange', 'USD', 100000, 0, 100000 ],
-    [ 'exchange', 'EOX', 100000, 0, 100000 ],
-    [ 'exchange', 'IQX', 100000, 0, 100000 ],
-    [ 'exchange', 'EOS', 100000, 0, 100000 ] ] ]
+    'ws',
+    [ [ 'exchange', 'USD', 100000, 0, 100000 ],
+      [ 'exchange', 'EOX', 100000, 0, 100000 ],
+      [ 'exchange', 'IQX', 100000, 0, 100000 ],
+      [ 'exchange', 'EOS', 100000, 0, 100000 ] ] ]
 
   const snap = msg1[2]
   const w = new Wallet()
@@ -36,11 +36,11 @@ const {
   console.log('==== example wallet, just parsing ====')
   // simulate msg from api - snapshot
   const msg1 = [ '0',
-  'ws',
-  [ [ 'exchange', 'USD', 100000, 0, 100000 ],
-    [ 'exchange', 'EOX', 100000, 0, 100000 ],
-    [ 'exchange', 'IQX', 100000, 0, 100000 ],
-    [ 'exchange', 'EOS', 100000, 0, 100000 ] ] ]
+    'ws',
+    [ [ 'exchange', 'USD', 100000, 0, 100000 ],
+      [ 'exchange', 'EOX', 100000, 0, 100000 ],
+      [ 'exchange', 'IQX', 100000, 0, 100000 ],
+      [ 'exchange', 'EOS', 100000, 0, 100000 ] ] ]
 
   const snap = msg1[2]
   const w = new Wallet({ decimals: 8 })
