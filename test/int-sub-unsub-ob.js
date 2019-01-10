@@ -34,8 +34,8 @@ describe('managed state - sub unsub, state stays nice', () => {
         account: 'testuser1554'
       },
       transform: {
-        orderbook: { keyed: false, decimals: false },
-        wallet: { decimals: 8 }
+        orderbook: { keyed: false },
+        wallet: {}
       }
     }
     const sws = new Sunbeam(conf)
