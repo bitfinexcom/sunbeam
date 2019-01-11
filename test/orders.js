@@ -163,6 +163,26 @@ describe('orders helper', () => {
     assert.deepStrictEqual(o.getState(), [ snap[0], snap[1] ])
   })
 
+  it('update oc, mark deleted', () => {
+    const o = new Orders({ markDeleted: true })
+    o.update(snapMsg)
+
+    const snap = snapMsg[2]
+    // add order
+    o.update(onMsg)
+    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
+    assert.strictEqual(o.getState().length, 3)
+
+    // delete it
+    o.update(ocMsg)
+
+    const marked = o.getState()[2]
+    assert.strictEqual(marked.pop(), 'deleted')
+
+    assert.strictEqual(o.getState()[1].pop(), null) // nothing added to other msg
+    assert.strictEqual(o.getState().length, 3)
+  })
+
   it('supports keyed format, snaps', () => {
     const o = new Orders({ keyed: true })
     o.update(snapMsg)
@@ -254,5 +274,19 @@ describe('orders helper', () => {
       [state[0].id, state[1].id]
     )
     assert.strictEqual(o.getState().length, 2)
+  })
+
+  it('supports keyed format, delete', () => {
+    const o = new Orders({ keyed: true, markDeleted: true })
+    o.update(snapMsg)
+    o.update(onMsg)
+
+    assert.strictEqual(o.getState().length, 3)
+    o.update(ocMsg)
+
+    const state = o.getState()
+    assert.strictEqual(state[0].deleted, undefined)
+    assert.strictEqual(state[1].deleted, undefined)
+    assert.strictEqual(state[2].deleted, true)
   })
 })
