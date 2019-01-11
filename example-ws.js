@@ -110,7 +110,6 @@ ws.on('open', () => {
   const history = ws.requestHistory().then((history) => {
     console.log(history.res)
   })
-
 })
 
 setTimeout(() => {

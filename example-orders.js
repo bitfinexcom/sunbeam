@@ -74,7 +74,7 @@ const {
       null,
       null ] ] ]
 
-  const snap = msg1[2]
+  const snap = msg1
   const o = new Orders()
   o.update(snap)
 
@@ -88,7 +88,7 @@ const {
     'ACTIVE', null, null, 500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
     'API>EFX', null, null, null ]]
 
-  o.update(onMsg[2])
+  o.update(onMsg)
 
   console.log('updated orders 1:')
   console.log(o.getState())
@@ -100,7 +100,7 @@ const {
     500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
     'API>EFX', null, null, null]]
 
-  const update = ouMsg[2]
+  const update = ouMsg
   o.update(update)
   console.log('updated orders 2:')
   console.log(o.getState())
