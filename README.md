@@ -53,6 +53,7 @@ You can see all API calls in [example-ws.js](example-ws.js).
       - `wallet <Object>`
       - `orders <Object>`
         - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
+        - `markDeleted <Boolean>` cancelled orders are flagged as deleted, but not removed from the state
 
 
 ```js
