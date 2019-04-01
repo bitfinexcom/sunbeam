@@ -18,12 +18,14 @@ if (ScatterEOS.default) {
 ScatterJS.plugins(new ScatterEOS())
 
 const conf = {
-  url: 'wss://eosnode-withws.example.com',
-  moonbeam: 'http://127.0.0.1:8181',
+  url: 'wss://api-paper.eosfinex.com/ws/',
+  moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,
-    httpEndpoint: 'http://eosnode.example.com:8888', // used to get metadata for signing transactions
+    httpEndpoint: 'https://api-paper.eosfinex.com', // used to get metadata for signing transactions
+    tokenContract: 'eosio.token', // Paper sidechain token contract
+    exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
       scatter: {
         ScatterJS,
@@ -54,15 +56,15 @@ ws.on('open', async () => {
   console.log(await ws.auth())
   console.log(await ws.auth()) // cached
 
-  ws.onOrderBook({ symbol: 'IQX.USD' }, (ob) => {
-    console.log('ws.onOrderBook({ symbol: "IQX.USD" }')
+  ws.onOrderBook({ symbol: 'EOX.PUSDT' }, (ob) => {
+    console.log('ws.onOrderBook({ symbol: "EOX.PUSD" }')
     console.log(ob)
   })
 
   ws.subscribeOrderBook('IQX.USD')
 
   const order = {
-    symbol: 'IQX.USD',
+    symbol: 'EOX.PUSD',
     price: '1',
     amount: '1',
     type: 'EXCHANGE_LIMIT'
@@ -70,7 +72,7 @@ ws.on('open', async () => {
 
   const { payload, data } = await ws.place(order)
   ws.cancel({
-    symbol: 'IQX.USD',
+    symbol: 'EOX.PUSD',
     side: 'bid',
     id: '18446744073709551606',
     clientId: '1540306547501022'
@@ -80,17 +82,17 @@ ws.on('open', async () => {
 
 /*
   ws.deposit({
-    currency: 'EOS',
+    currency: 'EOX',
     amount: '2'
   })
 
   ws.withdraw({
-    currency: 'EOS',
+    currency: 'EOX',
     amount: '0.678'
   })
 
   ws.sweep({
-    currency: 'EOS'
+    currency: 'EOX'
   })
 */
 })

@@ -4,12 +4,14 @@ const Sunbeam = require('.')
 const Eos = require('eosjs')
 
 const conf = {
-  url: 'wss://eosnode-withws.example.com',
-  moonbeam: 'http://127.0.0.1:8181',
+  url: 'wss://api-paper.eosfinex.com/ws/',
+  moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     Eos: Eos,
-    httpEndpoint: 'http://eosnode.example.com:8888', // used to get metadata for signing transactions
+    httpEndpoint: 'https://api-paper.eosfinex.com', // used to get metadata for signing transactions
+    tokenContract: 'eosio.token', // Paper sidechain token contract
+    exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
       keys: {
         keyProvider: [''],
@@ -38,8 +40,8 @@ ws.on('error', (m) => {
 })
 
 ws.on('open', () => {
-  ws.onOrderBook({ symbol: 'BTC.USD' }, (ob) => {
-    console.log('ws.onOrderBook({ symbol: "BTC.USD" }')
+  ws.onOrderBook({ symbol: 'EOX.PUSDT' }, (ob) => {
+    console.log('ws.onOrderBook({ symbol: "EOX.PUSDT" }')
     console.log(ob)
   })
 
@@ -53,8 +55,8 @@ ws.on('open', () => {
     console.log(mw)
   })
 
-  ws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
-    console.log('ws.onManagedOrderbookUpdate({ symbol: "BTC.USD" }')
+  ws.onManagedOrderbookUpdate({ symbol: 'EOX.PUSDT' }, (ob) => {
+    console.log('ws.onManagedOrderbookUpdate({ symbol: "EOX.PUSDT" }')
     console.log(ob)
   })
 
@@ -65,13 +67,13 @@ ws.on('open', () => {
   })
 
   // filter enabled
-  ws.onOrderUpdate({ symbol: 'BTC.USD' }, (data) => {
-    console.log('ws.onOrderUpdate({ symbol: "BTC.USD" }')
+  ws.onOrderUpdate({ symbol: 'EOX.PUSDT' }, (data) => {
+    console.log('ws.onOrderUpdate({ symbol: "EOX.PUSDT" }')
     console.log(data)
   })
 
-  ws.onOrderUpdate({ symbol: 'ETH.USD' }, (data) => {
-    console.log('ws.onOrderUpdate({ symbol: "ETH.USD" }')
+  ws.onOrderUpdate({ symbol: 'EOX.PUSDT' }, (data) => {
+    console.log('ws.onOrderUpdate({ symbol: "EOX.PUSDT" }')
     console.log(data)
   })
 
@@ -80,30 +82,30 @@ ws.on('open', () => {
     console.log('private trade', data) // emits [ 'ETH.USD', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
   })
 
-  ws.onPublicTradeUpdate({ symbol: 'IQX.USD' }, (data) => {
+  ws.onPublicTradeUpdate({ symbol: 'EOX.PUSDT' }, (data) => {
     console.log('ws.onPublicTradeUpdate({} ')
     console.log('public trade', data)
   })
 
-  ws.subscribePublicTrades('IQX.USD')
+  ws.subscribePublicTrades('EOX.PUSDT')
 
   ws.onManagedOrdersUpdate({}, (orders) => {
     console.log('ws.onManagedOrdersUpdate')
     console.log(orders)
   })
 
-  ws.subscribeOrderBook('BTC.USD')
+  ws.subscribeOrderBook('EOX.PUSDT')
 
   // subscribe to private order updates, wallet updates and trade updates
   ws.auth()
 
   // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
   const order = {
-    symbol: 'BTC.USD',
-    price: '2300',
-    amount: '-14.99',
-    type: 'EXCHANGE_LIMIT',
-    clientId: '1332'
+    symbol: 'EOX.PUSDT',
+    price: '1',
+    amount: '-1.09',
+    type: 'EXCHANGE_LIMIT'
+    // clientId: '1332'
   }
   ws.place(order)
 
@@ -119,14 +121,14 @@ setTimeout(() => {
   console.log('orders')
   console.log(ws.getManagedStateComponent('orders'))
   console.log('books')
-  console.log(ws.getManagedStateComponent('books', 'BTC.USD'))
+  console.log(ws.getManagedStateComponent('books', 'EOX.PUSDT'))
 
   ws.unSubscribeOrderBook('BTC.USD')
   ws.unSubscribeWallet()
   ws.unSubscribeOrders()
 
   ws.cancel({
-    symbol: 'BTC.USD',
+    symbol: 'EOX.PUSDT',
     side: 'bid',
     id: '18446744073709551612',
     clientId: '1536867193329'
@@ -144,7 +146,7 @@ setTimeout(() => {
   */
 
   const order = {
-    symbol: 'BTC.USD',
+    symbol: 'EOX.PUSDT',
     price: '2300',
     amount: '-14.99',
     type: 'EXCHANGE_LIMIT',
