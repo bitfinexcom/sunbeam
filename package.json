@@ -41,7 +41,7 @@
     "cbq": "git+https://github.com/bitfinexcom/cbq-js.git",
     "eosjs": "^16.0.0",
     "isomorphic-ws": "^4.0.1",
-    "mandelbrot": "https://github.com/bitfinexcom/mandelbrot.git#8769af42a3933ba44d47324ca4aa2c8de8442a8b",
+    "mandelbrot": "https://github.com/bitfinexcom/mandelbrot.git#7bf653dbaaeee255ce6c8b76353e56d6ca2f4505",
     "node-fetch": "^2.2.1",
     "ws": "^6.1.0"
   },
