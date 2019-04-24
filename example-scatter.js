@@ -1,7 +1,6 @@
 'use strict'
 
 const Sunbeam = require('.')
-const Eos = require('eosjs')
 
 let ScatterJS = require('scatterjs-core')
 if (ScatterJS.default) {
@@ -9,7 +8,7 @@ if (ScatterJS.default) {
   ScatterJS = ScatterJS.default
 }
 
-let ScatterEOS = require('scatterjs-plugin-eosjs')
+let ScatterEOS = require('scatterjs-plugin-eosjs2')
 if (ScatterEOS.default) {
   // package was precompiled for babel es6 modules
   ScatterEOS = ScatterEOS.default
@@ -17,13 +16,32 @@ if (ScatterEOS.default) {
 
 ScatterJS.plugins(new ScatterEOS())
 
+const { Api, JsonRpc } = require('eosjs')
+
+// nodejs
+const fetch = require('node-fetch')
+const { TextDecoder, TextEncoder } = require('util')
+
+const httpEndpoint = 'https://api-paper.eosfinex.com'
+
+const rpc = new JsonRpc(httpEndpoint, { fetch })
+const api = new Api({
+  rpc,
+  textDecoder: new TextDecoder(),
+  textEncoder: new TextEncoder()
+})
+
+const client = {
+  rpc,
+  api
+}
+
 const conf = {
   url: 'wss://api-paper.eosfinex.com/ws/',
   moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
-    Eos: Eos,
-    httpEndpoint: 'https://api-paper.eosfinex.com', // used to get metadata for signing transactions
+    httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
     tokenContract: 'eosio.token', // Paper sidechain token contract
     exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
@@ -41,7 +59,7 @@ const conf = {
   }
 }
 
-const ws = new Sunbeam(conf)
+const ws = new Sunbeam(client, conf)
 
 ws.on('message', (m) => {
   console.log(m)

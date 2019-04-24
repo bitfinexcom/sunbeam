@@ -1,22 +1,44 @@
 'use strict'
 
 const Sunbeam = require('.')
-const Eos = require('eosjs')
 
-const conf = {
+const { Api, JsonRpc } = require('eosjs')
+const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig')
+
+const fetch = require('node-fetch')
+const { TextDecoder, TextEncoder } = require('util')
+const keys = ['SECRET']
+
+const signatureProvider = new JsSignatureProvider(keys)
+
+const httpEndpoint = 'https://api-paper.eosfinex.com'
+
+const rpc = new JsonRpc(httpEndpoint, { fetch })
+const api = new Api({
+  rpc,
+  signatureProvider,
+  textDecoder: new TextDecoder(),
+  textEncoder: new TextEncoder()
+})
+
+const client = {
+  rpc,
+  api
+}
+
+// setup sunbeam
+const opts = {
   url: 'wss://api-paper.eosfinex.com/ws/',
   moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
-    Eos: Eos,
-    httpEndpoint: 'https://api-paper.eosfinex.com', // used to get metadata for signing transactions
+    httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
     tokenContract: 'eosio.token', // Paper sidechain token contract
     exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
       keys: {
-        keyProvider: [''],
-        account: '',
-        permission: '@active'
+        account: '', // accountname to use
+        permission: 'active'
       },
       scatter: null
     }
@@ -28,7 +50,7 @@ const conf = {
   }
 }
 
-const ws = new Sunbeam(conf)
+const ws = new Sunbeam(client, opts)
 
 ws.on('message', (m) => {
   console.log(m)
@@ -40,6 +62,16 @@ ws.on('error', (m) => {
 })
 
 ws.on('open', () => {
+  // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
+  const order = {
+    symbol: 'EOX.PUSDT',
+    price: '300.5',
+    amount: '-1.09',
+    type: 'EXCHANGE_LIMIT'
+    // clientId: '1332'
+  }
+  ws.place(order)
+
   ws.onOrderBook({ symbol: 'EOX.PUSDT' }, (ob) => {
     console.log('ws.onOrderBook({ symbol: "EOX.PUSDT" }')
     console.log(ob)
@@ -99,17 +131,7 @@ ws.on('open', () => {
   // subscribe to private order updates, wallet updates and trade updates
   ws.auth()
 
-  // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
-  const order = {
-    symbol: 'EOX.PUSDT',
-    price: '1',
-    amount: '-1.09',
-    type: 'EXCHANGE_LIMIT'
-    // clientId: '1332'
-  }
-  ws.place(order)
-
-  const history = ws.requestHistory().then((history) => {
+  ws.requestHistory().then((history) => {
     console.log(history.res)
   })
 })
