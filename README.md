@@ -26,19 +26,18 @@ node example-ws.js
 
 You can see all API calls in [example-ws.js](example-ws.js).
 
-### `new Sunbeam(opts) => sunbeam`
+### `new Sunbeam(client, opts) => sunbeam`
+  - `client <Object>`
+    - `rpc` official eosjs rpc class instance
+    - `api` official eosjs Api class instance
   - `opts <Object>`
     - `url <String>` Address of the websocket eosfinex node
     - `moonbeam <String>` optional HTTP server to retrieve historical data
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
-      - `Eos <Class>` The official eosjs client Class from `require('eosjs')`
       - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
       - `tokenContract <String|null>` name of the used token contract, defaults to `eosio.token`
       - `exchangeContract <String|null>` name of the used exchange contract, defaults to `efinexchange`
-      - `abis <Object> (optional)` eosfinex contract abis, so no initial http request is required to get the contract abi and httpEndpoint can be omitted
-        - `exchange <Object>` Exchange abi
-        - `token <Object>` Token contract abi
       - `auth` Auth options
         - `keys` use default signing
           - `keyProvider <String>` your key, used to sign transactions
@@ -57,20 +56,46 @@ You can see all API calls in [example-ws.js](example-ws.js).
 
 
 ```js
-const Eos = require('eosjs')
+// prepare eosjs lib for signing of websocket messages
+
+const { Api, JsonRpc } = require('eosjs')
+const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig')
+
+
+const fetch = require('node-fetch')
+const { TextDecoder, TextEncoder } = require('util')
+const keys = ['SECRET']
+
+const signatureProvider = new JsSignatureProvider(keys)
+
+const httpEndpoint = 'https://api-paper.eosfinex.com'
+
+const rpc = new JsonRpc(httpEndpoint, { fetch })
+const api = new Api({
+  rpc,
+  signatureProvider,
+  textDecoder: new TextDecoder(),
+  textEncoder: new TextEncoder()
+})
+
+const client = {
+  rpc,
+  api
+}
+
+// setup sunbeam
 const opts = {
-  url: 'wss://eosnode.example.com',
+  url: 'wss://api-paper.eosfinex.com/ws/',
+  moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
-    Eos: Eos,
-    httpEndpoint: 'https://eosnode.example.com:8888',
-    abis: null, // fetched via http from eos node if null
-
+    httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
+    tokenContract: 'eosio.token', // Paper sidechain token contract
+    exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
       keys: {
-        keyProvider: [''], // your key, used to sign transactions
         account: '', // accountname to use
-        permission: '@active'
+        permission: 'active'
       },
       scatter: null
     }
@@ -82,7 +107,7 @@ const opts = {
   }
 }
 
-const ws = new Sunbeam(opts)
+const ws = new Sunbeam(client, opts)
 ws.open()
 ```
 
@@ -202,7 +227,7 @@ type                         flag         abstraction available
 
 post only                       1         postOnly: true
 ioc                             2         EXCHANGE_IOC
-market                          4         EXCHANGE_MARKET   
+market                          4         EXCHANGE_MARKET
 release on trade               64
 sweep collateral              128
 
