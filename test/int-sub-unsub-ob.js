@@ -28,17 +28,17 @@ describe('managed state - sub unsub, state stays nice', () => {
       url: 'ws://localhost:8888',
       eos: {
         expireInSeconds: 60 * 60, // 1 hour,
-        Eos: null,
         httpEndpoint: '',
         keyProvider: [''], //
-        account: 'testuser1554'
+        account: 'testuser1554',
+        auth: {}
       },
       transform: {
         orderbook: { keyed: false },
         wallet: {}
       }
     }
-    const sws = new Sunbeam(conf)
+    const sws = new Sunbeam({}, conf)
 
     let subscriptions = 0
     wss.messageHook = (ws, msg) => {
