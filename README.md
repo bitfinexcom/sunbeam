@@ -1,6 +1,23 @@
 # sunbeam
 
-Eosfinex adapter for Node and the browser.
+Eosfinex Websocket adapter for Node and the browser.
+
+We designed the eosfinex Websocket API with both speed and compatibility in mind.
+It is a subset of the existing Bitfinex API v2, with modifications
+for on-chain trading. Existing API v2 users should be able to start with
+only a small changeset to their existing clients.
+
+sunbeam is the current reference implementation of the Websocket API client. It
+interacts with the contract ABI. For more details, see the
+[signing section](#signing).
+
+This readme covers both the sunbeam API and explains how it interacts behind
+the scenes with the server.
+
+The main difference between the Bitfinex WS API and eosfinex's API is the
+signing of messages. For eosfinex, we have to sign actions with our eosjs
+private key. A signed transaction is also used for subscriptions to trade,
+order and wallet snapshots and updates.
 
 ```js
 const Sunbeam = require('sunbeam')
@@ -8,6 +25,12 @@ const Sunbeam = require('sunbeam')
 // Browser usage: import into browsers in case you can't transpile ES6
 const Sunbeam = require('sunbeam/dist')
 ```
+
+## Paper Trading
+
+On paper trading tokens are generally prefixed by `P`. So `USDT` becomes
+`PUSDT`. The only exception is the resource token `EOX`. For a list of
+available trading pairs, see [#trade-pairs](#trade-pairs).
 
 ## Examples
 
@@ -31,7 +54,7 @@ You can see all API calls in [example-ws.js](example-ws.js).
     - `rpc` official eosjs rpc class instance
     - `api` official eosjs Api class instance
   - `opts <Object>`
-    - `url <String>` Address of the websocket eosfinex node
+    - `url <String>` Address of the Websocket eosfinex node
     - `moonbeam <String>` optional HTTP server to retrieve historical data
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
@@ -136,7 +159,7 @@ ws.open()
 
 #### `Event: message`
 
-Emitted for every message that the websocket server server sends. Useful
+Emitted for every message that the Websocket client receives. Useful for
 debugging and custom extensions.
 
 *Example:*
@@ -175,7 +198,7 @@ ws.open()
 
 #### `sunbeam.close()`
 
-Closes the connection to eosfinex.
+Closes the connection to the server.
 
 *Example:*
 
@@ -185,12 +208,23 @@ ws.close()
 
 #### `sunbeam.auth() => Promise`
 
-Takes the account name you have defined when creating a Sunbeam instance with
-`opts.eos.account`. Your private key stays local.
+Subscribes you to `wallet`, `trade` and `order` updates for the specified account.
 
-It will sign a verification transaction that is send to the Websocket endpoint
-for validation. This transaction is not applied to the chain, just used for
-verifying the signature.
+
+Takes the account name you have defined when creating a Sunbeam instance with
+`opts.eos.auth` or receives the account name from Scatter. Your private key
+stays on your machine.
+
+<a id="auth" />
+
+You can authenticate on the eosfinex Websocket API like with the Bitfinex API.
+The API will then send you your wallet, order and trades snapshots and updates.
+For this a special action is available in the contract ABI called `validate`.
+The Websocket plugin uses it to verify that the transaction belongs to the
+proper account.
+
+Sunbeam signs a verification transaction that is send to the Websocket endpoint
+for validation. This transaction is just used for verifying the signature.
 
 If you configured auth via scatter, it will connect to scatter. Remember to remove
 any global references to ScatterJS **and any global references to Sunbeam**:
@@ -199,7 +233,18 @@ any global references to ScatterJS **and any global references to Sunbeam**:
 window.ScatterJS = null;
 ```
 
-Subscribes you to `wallet`, `trade` and `order` updates for the specified account.
+*Sent payload:*
+
+```
+{
+ event: 'auth',
+ account: '$YOUR_USERNAME',
+ meta: signed
+}
+```
+
+Where `signed` is a signed transaction for the `validate` action.
+
 
 #### `sunbeam.logoutScatter() => Promise`
 
@@ -215,10 +260,15 @@ Forgets scatter identity (if scatter is used for auth).
     - `postOnly <Boolean>` Submit postonly order, sugar for flags `1`
     - `flags <Number>`
 
-Creates an order compatible with the contract abi, pre-signs it and sends it
+Creates an order compatible with the contract ABI, pre-signs it and sends it
 to the Websocket endpoint.
 
-List of available flags
+To be able to identify the order, a client **MUST** send a custom client id with it
+that must be unique to the clients orders.
+
+
+##### List of available flags
+<a id="order-flags" />
 
 Some flags are abstracted by Sunbeam. Here is a full list of available flags:
 
@@ -234,7 +284,58 @@ sweep collateral              128
 ```
 
 A post only order would have the flag 1,
-a post only + ioc order would have the flag 3
+A post only + IOC order would have the flag 3
+
+<a id="signing" />
+<a id="abi" />
+
+Behind the scenes Sunbeam uses the exchange contract ABI to sign the transaction.
+The ABI is publicly available via `cleos` or curl:
+
+```
+curl --request POST \
+  --url https://api-paper.eosfinex.com/v1/chain/get_abi \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"account_name":"eosfinex"}'
+```
+
+For an introduction to the contract ABI, see https://medium.com/eosfinexproject/the-eosfinex-exchange-contract-9c971c1aed1b
+
+After signing, the transaction is sent to the Websocket server:
+
+```js
+const signed = {
+  "expiration": "2019-05-10T18:17:13.000",
+  "ref_block_num": 27684,
+  "ref_block_prefix": 959416581,
+  "max_net_usage_words": 0,
+  "max_cpu_usage_ms": 0,
+  "delay_sec": 0,
+  "context_free_actions": [],
+  "actions": [
+    {
+      "account": "efinexchange",
+      "name": "place",
+      "authorization": [
+        {
+          "actor": "testuser1114",
+          "permission": "active"
+        }
+      ],
+      "data": "40420857619DB1CAF1B4BFA26A01000000800139610D3A5548DA2D0000000000942A00000000000000"
+    }
+  ],
+  "transaction_extensions": [],
+  "signatures": [
+    "SIG_K1_Ke541LARCg24Zg66cacNLEfrJXJzfdgeZKNmyKEsxyGUVFxxEPxqJqYQJgv8gc2CXsG9a5HYvDrMePUGyfH8P6uihDoiSp"
+  ]
+}
+
+// sent payload to server:
+[0, 'on', null, { meta: signed }]
+```
+
 
 *Example:*
 
@@ -242,7 +343,7 @@ a post only + ioc order would have the flag 3
 
 // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
 const order = {
-  symbol: 'BTC.USD',
+  symbol: 'EOX.USDT',
   amount: '1',
   type: 'EXCHANGE_MARKET',
   clientId: '12345' // unique locally assigned id
@@ -251,7 +352,7 @@ ws.place(order)
 
 // available types: EXCHANGE_MARKET EXCHANGE_IOC EXCHANGE_LIMIT
 const order = {
-  symbol: 'BTC.USD',
+  symbol: 'EOX.USDT',
   amount: '1',
   price: '1',
   type: 'EXCHANGE_LIMIT',
@@ -262,10 +363,18 @@ ws.place(order)
 
 The request will be signed locally using the `eosjs` module.
 
+*Sent payload:*
+
+```
+[0, 'on', null, { meta: signed }]
+```
+
+`signed` is a signed payload for the `place` [action of the **exchange contract**](#abi).
+
 #### `sunbeam.cancel(data) => Promise`
 
   - `data`
-    - `symbol <String>` The pair, i.e. `BTC.USD`
+    - `symbol <String>` The pair, i.e. `EOX.USDT`
     - `side <String>` `bid` or `ask`
     - `id <String>` The id returned from the contract on placement
     - `clientId <String>` The unique id assigned by the client
@@ -276,14 +385,22 @@ Cancels an order.
 
 ```js
 ws.cancel({
-  symbol: 'BTC.USD',
+  symbol: 'EOX.USDT',
   side: 'bid',
   id: '18446744073709551612',
   clientId: '1536867193329'
 })
 ```
 
-The request will be signed locally using the `eosjs` module.
+The request will be [signed locally](#signing) using the `eosjs` module.
+
+*Sent payload:*
+
+```
+[0, 'oc', null, { meta: signed }]
+```
+
+`signed` is a signed payload for the `cancel` [action of the **exchange contract**](#abi).
 
 #### `sunbeam.withdraw(data) => Promise`
 
@@ -293,10 +410,9 @@ The request will be signed locally using the `eosjs` module.
   - `to <String> (optional)` The account to withdraw to.
 
 Withdraws tokens to a specified account. The account must be the same as
-the account used with EOSfinex.
+the account used with eosfinex.
 
-Defaults to account passed in constructor, `opts.eos.account`.
-
+Defaults to the account used for auth.
 
 *Example:*
 
@@ -307,7 +423,16 @@ ws.withdraw({
 })
 ```
 
-The request will be signed locally using the `eosjs` module.
+The request will be [signed locally](#signing) using the `eosjs` module.
+
+*Sent payload:*
+
+```
+[0, 'tx', null, { meta: signed }]
+```
+
+This request uses the general `tx` identifier for messages. `signed` is
+a signed payload for the `withdraw` [action of the **exchange contract**](#abi).
 
 #### `sunbeam.sweep(data) => Promise`
 
@@ -316,9 +441,9 @@ The request will be signed locally using the `eosjs` module.
   - `to <String> (optional)` The account to withdraw to.
 
 Sweeps tokens to a specified account. The account must be the same as
-the account used with EOSfinex.
+the account used with eosfinex.
 
-Defaults to account passed in constructor, `opts.eos.account`.
+Defaults to the account used for auth.
 
 *Example:*
 
@@ -331,17 +456,27 @@ ws.sweep({
 // [ '0', 'wu', [ 'exchange', 'EUR', 0, 0, null ] ]
 
 // and the amount is transferred back to the deposit contract:
-$ ./cleos get currency balance efinextether testuser1431
-100.00000000 EUR
+// $ ./cleos get currency balance efinextether testuser1431
+// 100.00000000 EUR
 ```
+
+*Sent payload:*
+
+```
+[0, 'tx', null, { meta: signed }]
+```
+
+This request uses the general `tx` identifier for messages. `signed` is
+a signed payload for the `sweep` [action of the **exchange contract**](#abi).
+
 
 #### `sunbeam.deposit(data) => Promise`
   - `data`
     - `currency <String>` The currency to deposit, e.g. `BTC`
     - `amount <String>` The amount to deposit
 
-Takes your user account, defined in `opts.eos.account`, and deposits the desired amount
-to the exchange using the tether token contract.
+Deposits the desired amount to the exchange using the **token contract**.
+Takes the user account used for auth.
 
 *Example:*
 
@@ -355,49 +490,83 @@ ws.deposit({
 // [ '0', 'wu', [ 'exchange', 'EUR', 2, 0, null ] ]
 ```
 
-The request will be signed locally using the `eosjs` module.
+*Sent payload:*
+
+```
+[0, 'tx', null, { meta: signed }]
+```
+
+This request uses the general `tx` identifier for messages. `signed` is
+a signed payload for the `sweep` action of the **token contract**.
+
+The request will be [signed locally](#signing) using the `eosjs` module.
 
 #### `sunbeam.subscribeOrderBook(pair)`
-  - `pair <String>` The pair, i.e. `BTC.USD`
+  - `pair <String>` The pair, i.e. `EOX.USDT`
 
 Subscribe to orderbook updates for a pair. The format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
+The amount of entries is limited to 100 entries on the bid and ask side.
 
 *Example:*
 
 ```js
-ws.onOrderBook({ symbol: 'BTC.USD' }, (ob) => {
-  console.log('ws.onOrderBook({ symbol: "BTC.USD" }')
+ws.onOrderBook({ symbol: 'EOX.USDT' }, (ob) => {
+  console.log('ws.onOrderBook({ symbol: "EOX.USDT" }')
   console.log(ob)
 })
 
-ws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
-  console.log('ws.onManagedOrderbookUpdate({ symbol: "BTC.USD" }')
+ws.onManagedOrderbookUpdate({ symbol: 'EOX.USDT' }, (ob) => {
+  console.log('ws.onManagedOrderbookUpdate({ symbol: "EOX.USDT" }')
   console.log(ob)
 })
 
-ws.subscribeOrderBook('BTC.USD')
+// subscribe via:
+// { event: 'subscribe', channel: 'book', symbol: 'EOX.USDT' }
+ws.subscribeOrderBook('EOX.USDT')
+```
+
+*Sent Payload:*
+
+```
+{ event: 'subscribe', channel: 'book', symbol: 'EOX.USDT' }
 ```
 
 #### `sunbeam.subscribePublicTrades(pair)`
-  - `pair <String>` The pair, i.e. `BTC.USD`
+  - `pair <String>` The pair, i.e. `EOX.USDT`
 
 Unsubscribe from public trade updates for a pair.
 
 *Example:*
 
 ```js
-ws.subscribePublicTrades('BTC.USD')
+ws.subscribePublicTrades('EOX.USDT')
+```
+
+*Sent Payload:*
+
+```
+{ event: 'subscribe', channel: 'trades', symbol: 'EOX.USDT' }
 ```
 
 #### `sunbeam.unSubscribeOrderBook(pair)`
-  - `pair <String>` The pair, i.e. `BTC.USD`
+  - `pair <String>` The pair, i.e. `EOX.USDT`
 
 Unsubscribe from orderbook updates for a pair.
 
 *Example:*
 
 ```js
-ws.unSubscribeOrderBook('BTC.USD')
+ws.unSubscribeOrderBook('EOX.USDT')
+```
+
+*Sent Payload:*
+
+```
+{
+  event: 'unsubscribe',
+  channel: 'book',
+  symbol: 'EOX.USDT'
+}
 ```
 
 #### `sunbeam.subscribe(channel, ?opts)`
@@ -405,12 +574,33 @@ ws.unSubscribeOrderBook('BTC.USD')
   - `opts <Object>` Additional data to send
 
 
-Subscribes to a websocket channel.
+Subscribes to a Websocket channel.
+
+Available channels:
+
+```
+book            orderbooks
+reports         trade updates
+wallets         wallet snapshots / updates
+```
+
+The channels `reports` and `wallets` are automatically subscribed on authentication
+via Websocket.
 
 *Example:*
 
 ```js
 ws.subscribe('wallets', { account: 'testuser1431' })
+```
+
+*Sent Payload:*
+
+```
+{
+  event: 'subscribe',
+  channel: 'wallets',
+  account: 'testuser1431'
+}
 ```
 
 #### `sunbeam.unsubscribe(channel, ?opts)`
@@ -419,11 +609,25 @@ ws.subscribe('wallets', { account: 'testuser1431' })
 
 Unsubscribes from a channel.
 
+The channels `reports` and `wallets` are automatically subscribed on authentication
+via Websocket.
+
 *Example:*
 
 ```js
 ws.unsubscribe('wallets', { account: 'testuser1431' })
 ```
+
+*Sent Payload:*
+
+```
+{
+  event: 'unsubscribe',
+  channel: 'wallets',
+  account: 'testuser1431'
+}
+```
+
 
 #### `sunbeam.requestHistory() => Promise`
 
@@ -435,6 +639,70 @@ to receive the trading history.
 ```js
 const history = await ws.requestHistory()
 console.log(history)
+```
+
+#### Websocket API helper RPC calls
+
+There are a few additional RPC calls that can help when writing your own
+client.
+
+##### Chain metadata - { event: 'chain' }
+
+Returns metadata used for signing transactions via Websocket.
+
+Format is:
+
+```
+[0, 'ci', [
+  $headBlockTime,
+  $lastIrreversibleBlockNumber,
+  $chainId,
+  $refBlockPrefix
+]]
+```
+
+*Example:*
+
+```js
+ws.on('message', (m) => {
+  console.log(m)
+})
+
+ws.send({ event: 'chain' })
+```
+
+*Example response:*
+
+```
+[ '0',
+  'ci',
+  [ '1557850696',
+    9296555,
+    'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
+    '372320450' ] ]
+```
+
+##### Trading pairs - { event: 'pa' }
+<a id="trade-pairs" />
+
+Returns available trading pairs.
+
+*Example:*
+
+```js
+ws.on('message', (m) => {
+  console.log(m)
+})
+
+ws.send({ event: 'pairs' })
+```
+
+*Example response:*
+
+```
+[ '0',
+  'pa',
+  [ 'PIQ.PUSDT', 'EOX.PUSDT', 'PEOS.PUSDT', 'PEMT.PUSDT' ] ]
 ```
 
 ### Managed State Updates
@@ -449,7 +717,7 @@ For every update, the full updated data is emitted.
 
 #### `sunbeam.onManagedOrderbookUpdate(opts, handler)`
   - `opts <Object>`
-    - `symbol <String>` The symbol to emit the orderbook update for, i.e. `BTC.USD`
+    - `symbol <String>` The symbol to emit the orderbook update for, i.e. `EOX.USDT`
   - `handler <Function>` Called every time the state is updated
 
 The input format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
@@ -460,10 +728,10 @@ the `onOrderBook` handler.
 *Example:*
 
 ```js
-ws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
+ws.onManagedOrderbookUpdate({ symbol: 'EOX.USDT' }, (ob) => {
   console.log(ob)
 })
-ws.subscribeOrderBook('BTC.USD')
+ws.subscribeOrderBook('EOX.USDT')
 ```
 
 Registered for messages from the corresponding book channel (received on subscribe).
@@ -550,18 +818,18 @@ Registered for `tu`, `te` messages via channel `0`.
 
 #### `sunbeam.onPublicTradeUpdate(opts, handler)`
   - `opts <Object>`
-    - `symbol <String>` The symbol to emit the public trade updates for, i.e. `BTC.USD`
+    - `symbol <String>` The symbol to emit the public trade updates for, i.e. `EOX.USDT`
   - `handler <Function>` The callback called for every update
 
 *Example:*
 
 ```js
-ws.onPublicTradeUpdate({ symbol: 'ETH.USD' }, (data) => {
-  console.log('ws.onPublicTradeUpdate({ symbol: "ETH.USD" }')
-  console.log(data) // emits [ 'ETH.USD', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
+ws.onPublicTradeUpdate({ symbol: 'EOX.USDT' }, (data) => {
+  console.log('ws.onPublicTradeUpdate({ symbol: "EOX.USDT" }')
+  console.log(data) // emits [ 'EOX.USDT', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
 })
 
-ws.subscribePublicTrades('ETH.USD')
+ws.subscribePublicTrades('EOX.USDT')
 ```
 
 Registered for `tu`, `te` messages via the corresponding channel for the symbol.
@@ -569,7 +837,7 @@ Registered for `tu`, `te` messages via the corresponding channel for the symbol.
 
 #### `sunbeam.onOrderBook(opts, handler)`
   - `opts <Object>`
-    - `symbol <String>` The symbol to emit the orderbook update for, i.e. `BTC.USD`
+    - `symbol <String>` The symbol to emit the orderbook update for, i.e. `EOX.USDT`
   - `handler <Function>` The callback called for every update
 
 Just emits order updates and order snapshots without keeping or managing state.
@@ -577,10 +845,10 @@ Just emits order updates and order snapshots without keeping or managing state.
 *Example:*
 
 ```js
-ws.onOrderBook({ symbol: 'BTC.USD' }, (ob) => {
+ws.onOrderBook({ symbol: 'EOX.USDT' }, (ob) => {
   console.log(ob)
 })
-ws.subscribeOrderBook('BTC.USD')
+ws.subscribeOrderBook('EOX.USDT')
 ```
 
 Registered for messages from the corresponding book channel (received on subscribe).
@@ -610,7 +878,7 @@ Sometimes you may want to interact with Sunbeam's managed state. They are expose
 
 sb.getManagedStateComponent('wallet')
 sb.getManagedStateComponent('orders')
-sb.getManagedStateComponent('books', 'BTC.USD')
+sb.getManagedStateComponent('books', 'EOX.USDT')
 ```
 
 ## Setup your node
