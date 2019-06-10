@@ -21,4 +21,10 @@ describe('util', () => {
   it('decimalpad max padding', () => {
     assert.strictEqual(decimalPad('6.12345678', 8), '6.12345678')
   })
+
+  it('decimalpad > padding', () => {
+    assert.throws(() => {
+      decimalPad('6.12345678', 6)
+    })
+  })
 })
