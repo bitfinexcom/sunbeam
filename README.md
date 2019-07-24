@@ -245,6 +245,13 @@ window.ScatterJS = null;
 
 Where `signed` is a signed transaction for the `validate` action.
 
+*important:* to be able to trade, you have to accept the terms of service.
+
+
+#### `sunbeam.acceptTos(version)`
+
+Accepts the terms of service. Must be called before `.auth()`
+
 
 #### `sunbeam.logoutScatter() => Promise`
 

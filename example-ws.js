@@ -128,6 +128,9 @@ ws.on('open', () => {
 
   ws.subscribeOrderBook('EOX.PUSDT')
 
+  const tos = 'tos_version' // read tos and get current version
+  ws.acceptTos(tos)
+
   // subscribe to private order updates, wallet updates and trade updates
   ws.auth()
 
