@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bitfinexcom/sunbeam.svg?branch=master)](https://travis-ci.org/bitfinexcom/sunbeam)
+
 # sunbeam
 
 Eosfinex Websocket adapter for Node and the browser.
