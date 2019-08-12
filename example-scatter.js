@@ -38,7 +38,6 @@ const client = {
 
 const conf = {
   url: 'wss://api-paper.eosfinex.com/ws/',
-  moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint: httpEndpoint, // used to get metadata for signing transactions

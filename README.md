@@ -57,7 +57,6 @@ You can see all API calls in [example-ws.js](example-ws.js).
     - `api` official eosjs Api class instance
   - `opts <Object>`
     - `url <String>` Address of the Websocket eosfinex node
-    - `moonbeam <String>` optional HTTP server to retrieve historical data
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
       - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
@@ -111,7 +110,6 @@ const client = {
 // setup sunbeam
 const opts = {
   url: 'wss://api-paper.eosfinex.com/ws/',
-  moonbeam: 'https://api-paper.eosfinex.com/rest',
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
@@ -254,6 +252,42 @@ Where `signed` is a signed transaction for the `validate` action.
 
 Accepts the terms of service. Must be called before `.auth()`
 
+
+#### `sunbeam.getSignedTx(?user) => Promise`
+
+  - `user <Object>` optional user object. if not defined, will use the data provided in the constructor or retrieve it from scatter
+
+Signs a transaction that can be used for login on the WS server for custom auth flows.
+
+Example:
+
+```js
+const user = {
+  authorization: {
+    authorization: "testuser1114@active"
+  },
+  account: "testuser1114",
+  permission: "active"
+}
+
+const signed = await ws.getSignedTx(user)
+
+const getData = (data) => {
+  return {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  }
+}
+
+// get history
+const history = await fetch(moonbeamUrl + '/history', getData({
+  meta: signed,
+  limit: 50
+})).then(res => res.json())
+
+console.log(history)
+```
 
 #### `sunbeam.logoutScatter() => Promise`
 
@@ -635,19 +669,6 @@ ws.unsubscribe('wallets', { account: 'testuser1431' })
   channel: 'wallets',
   account: 'testuser1431'
 }
-```
-
-
-#### `sunbeam.requestHistory() => Promise`
-
-Sends a verification transaction to a moonbeam server
-to receive the trading history.
-
-*Example:*
-
-```js
-const history = await ws.requestHistory()
-console.log(history)
 ```
 
 #### Websocket API helper RPC calls
