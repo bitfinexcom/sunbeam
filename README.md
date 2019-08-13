@@ -574,6 +574,19 @@ ws.subscribeOrderBook('EOX.USDT')
 { event: 'subscribe', channel: 'book', symbol: 'EOX.USDT' }
 ```
 
+*Example responses:*
+
+```
+// format
+[PAIR,[ID,AMOUNT,PRICE], TIMESTAMP]
+
+// snapshot:
+["EOS.USDT",["263237",4.0921,-1.8913], 1565682279501]]
+
+// update:
+["EOS.USDT",["263237",4.0921,-1.8913], 1565682279520]
+```
+
 #### `sunbeam.subscribePublicTrades(pair)`
   - `pair <String>` The pair, i.e. `EOX.USDT`
 
