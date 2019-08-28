@@ -131,7 +131,18 @@ const opts = {
 }
 
 const ws = new Sunbeam(client, opts)
+
+// it is required to have read and agreed to our TOS to do trading
+// get the current TOS version from:
+// after reading the TOS, you can find them at the bottom of the page
+// https://www.eosfinex.com/legal/terms/
+ws.on('open', () => {
+  const tos = '$CURRENT_TOS'
+  ws.acceptTos(tos)
+})
+
 ws.open()
+
 ```
 
 For an example how to prefetch the contract abis to avoid the initial
@@ -252,6 +263,9 @@ Where `signed` is a signed transaction for the `validate` action.
 
 Accepts the terms of service. Must be called before `.auth()`
 
+It is required to have read and agreed to our TOS to do trading
+After reading the TOS, you can find the current version at the bottom of the page
+https://www.eosfinex.com/legal/terms/
 
 #### `sunbeam.getSignedTx(?user) => Promise`
 
