@@ -1,0 +1,29 @@
+{
+  "staging": {
+    "keys": ["__SECRET__"],
+
+    "urls": {
+      "pub": "ws://__API__",
+      "priv": "ws://__API__",
+      "aux": "ws://__API__"
+    },
+    "eos": {
+      "expireInSeconds": 3600,
+      "httpEndpoint": "http://__API__",
+      "auth": {
+        "keys": {
+          "account": "__ACCOUNT__",
+          "permission": "active"
+        },
+        "scatter": null
+      }
+    },
+    "state": {
+      "transform": {
+        "orderbook": { "keyed": true },
+        "wallet": {},
+        "orders": {}
+      }
+    }
+  }
+}

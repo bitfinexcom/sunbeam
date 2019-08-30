@@ -25,7 +25,7 @@ describe('managed state - sub unsub, state stays nice', () => {
     })
 
     const conf = {
-      url: 'ws://localhost:8888',
+      urls: { pub: 'ws://localhost:8888' },
       eos: {
         expireInSeconds: 60 * 60, // 1 hour,
         httpEndpoint: '',
@@ -67,7 +67,7 @@ describe('managed state - sub unsub, state stays nice', () => {
       if (msg.event === 'unsubscribe') {
         subscriptions++
 
-        sws.subscribeOrderBook('BTC.USD')
+        sws.subscribeOrderbook('BTC.USD')
         sendDelayedSub(snapNew, 50)
       }
     }
@@ -77,11 +77,11 @@ describe('managed state - sub unsub, state stays nice', () => {
     }
 
     sws.on('open', () => {
-      sws.subscribeOrderBook('BTC.USD')
+      sws.subscribeOrderbook('BTC.USD')
     })
 
     let count = 0
-    sws.onManagedOrderbookUpdate({ symbol: 'BTC.USD' }, (ob) => {
+    sws.onOrderbook({ symbol: 'BTC.USD' }, (ob) => {
       if (count === 1) {
         count++
       }
@@ -89,7 +89,7 @@ describe('managed state - sub unsub, state stays nice', () => {
       if (count === 0) {
         assert.deepStrictEqual(ob, snap)
         count++
-        sws.unSubscribeOrderBook('BTC.USD')
+        sws.unsubscribeOrderbook('BTC.USD')
       }
 
       if (count === 2) {

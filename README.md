@@ -1,19 +1,19 @@
 [![Build Status](https://travis-ci.org/bitfinexcom/sunbeam.svg?branch=master)](https://travis-ci.org/bitfinexcom/sunbeam)
 
-# sunbeam
+# Sunbeam
 
-Eosfinex Websocket adapter for Node and the browser.
+eosfinex Websocket adapter for Node and the browser.
 
 We designed the eosfinex Websocket API with both speed and compatibility in mind.
 It is a subset of the existing Bitfinex API v2, with modifications
 for on-chain trading. Existing API v2 users should be able to start with
 only a small changeset to their existing clients.
 
-sunbeam is the current reference implementation of the Websocket API client. It
+Sunbeam is the current reference implementation of the Websocket API client. It
 interacts with the contract ABI. For more details, see the
 [signing section](#signing).
 
-This readme covers both the sunbeam API and explains how it interacts behind
+This readme covers both the Sunbeam API and explains how it interacts behind
 the scenes with the server.
 
 The main difference between the Bitfinex WS API and eosfinex's API is the
@@ -56,7 +56,10 @@ You can see all API calls in [example-ws.js](example-ws.js).
     - `rpc` official eosjs rpc class instance
     - `api` official eosjs Api class instance
   - `opts <Object>`
-    - `url <String>` Address of the Websocket eosfinex node
+    - `urls <Object>` Websocket transports
+      - `pub <String>` Public transport
+      - `priv <String>`Private transport
+      - `aux <String>` Aux transport
     - `eos <Object>` options passed to Eos client for signing transactions
       - `expireInSeconds <Number>` Expiration time for signed tx
       - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
@@ -70,14 +73,14 @@ You can see all API calls in [example-ws.js](example-ws.js).
         - `scatter <Object>` Scatter options if scatter is used for signing
           - `appName <String>` App name showed to Scatter user
           - `ScatterJS <Object>` Scatter instance
-    - `transform <Object>` Options passed to state components
-      - `orderbook <Object>`
-        - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
-      - `wallet <Object>`
-      - `orders <Object>`
-        - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
-        - `markDeleted <Boolean>` cancelled orders are flagged as deleted, but not removed from the state
-
+    - `state <Object>` Options passed to state components
+      - `transform <Object>` transformation ooptions (keyed objects or array format)
+        - `orderbook <Object>`
+          - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
+        - `wallet <Object>`
+        - `orders <Object>`
+          - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
+          - `markDeleted <Boolean>` cancelled orders are flagged as deleted, but not removed from the state
 
 ```js
 // prepare eosjs lib for signing of websocket messages
@@ -123,10 +126,12 @@ const opts = {
       scatter: null
     }
   },
-  transform: {
-    orderbook: { keyed: true },
-    wallet: {},
-    orders: { keyed: true }
+  state: {
+    transform: {
+      orderbook: { keyed: true },
+      wallet: {},
+      orders: {}
+    }
   }
 }
 
@@ -142,7 +147,6 @@ ws.on('open', () => {
 })
 
 ws.open()
-
 ```
 
 For an example how to prefetch the contract abis to avoid the initial
@@ -196,6 +200,14 @@ ws.on('error', (m) => {
 ### General methods
 
 You can see all API calls in [example-ws.js](example-ws.js).
+Before you can run it, make sure to configure your environment:
+
+```sh
+cp config/example-ws.config.json.example config/example-ws.config.json
+
+vim config/example-ws.config.json
+```
+
 
 #### `sunbeam.open()`
 
@@ -558,7 +570,7 @@ a signed payload for the `sweep` action of the **token contract**.
 
 The request will be [signed locally](#signing) using the `eosjs` module.
 
-#### `sunbeam.subscribeOrderBook(pair)`
+#### `sunbeam.subscribeOrderbook(pair)`
   - `pair <String>` The pair, i.e. `EOX.USDT`
 
 Subscribe to orderbook updates for a pair. The format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
@@ -567,19 +579,19 @@ The amount of entries is limited to 100 entries on the bid and ask side.
 *Example:*
 
 ```js
-ws.onOrderBook({ symbol: 'EOX.USDT' }, (ob) => {
-  console.log('ws.onOrderBook({ symbol: "EOX.USDT" }')
+ws.onOrderbook({ symbol: 'EOX.USDT' }, (ob) => {
+  console.log('ws.onOrderbook({ symbol: "EOX.USDT" }')
   console.log(ob)
 })
 
-ws.onManagedOrderbookUpdate({ symbol: 'EOX.USDT' }, (ob) => {
-  console.log('ws.onManagedOrderbookUpdate({ symbol: "EOX.USDT" }')
+ws.onManagedOrderbook({ symbol: 'EOX.USDT' }, (ob) => {
+  console.log('ws.onManagedOrderbook({ symbol: "EOX.USDT" }')
   console.log(ob)
 })
 
 // subscribe via:
 // { event: 'subscribe', channel: 'book', symbol: 'EOX.USDT' }
-ws.subscribeOrderBook('EOX.USDT')
+ws.subscribeOrderbook('EOX.USDT')
 ```
 
 *Sent Payload:*
@@ -605,7 +617,7 @@ ws.subscribePublicTrades('EOX.USDT')
 { event: 'subscribe', channel: 'trades', symbol: 'EOX.USDT' }
 ```
 
-#### `sunbeam.unSubscribeOrderBook(pair)`
+#### `sunbeam.unsubscribeOrderbook(pair)`
   - `pair <String>` The pair, i.e. `EOX.USDT`
 
 Unsubscribe from orderbook updates for a pair.
@@ -613,7 +625,7 @@ Unsubscribe from orderbook updates for a pair.
 *Example:*
 
 ```js
-ws.unSubscribeOrderBook('EOX.USDT')
+ws.unsubscribeOrderbook('EOX.USDT')
 ```
 
 *Sent Payload:*
@@ -626,14 +638,15 @@ ws.unSubscribeOrderBook('EOX.USDT')
 }
 ```
 
-#### `sunbeam.subscribe(channel, ?opts)`
+#### `sunbeam.subscribe(transport, channel, ?opts)`
+  - `transport <String>` The Websocket transport to use (`priv`, `pub`, `aux`)
   - `channel <String>` The channel to subscribe to
   - `opts <Object>` Additional data to send
 
 
 Subscribes to a Websocket channel.
 
-Available channels:
+Available channels for `priv`:
 
 ```
 book            orderbooks
@@ -647,7 +660,7 @@ via Websocket.
 *Example:*
 
 ```js
-ws.subscribe('wallets', { account: 'testuser1431' })
+ws.subscribe('priv', 'wallets', { account: 'testuser1431' })
 ```
 
 *Sent Payload:*
@@ -660,7 +673,8 @@ ws.subscribe('wallets', { account: 'testuser1431' })
 }
 ```
 
-#### `sunbeam.unsubscribe(channel, ?opts)`
+#### `sunbeam.unsubscribe(transport, channel, ?opts)`
+  - `transport <String>` The Websocket transport to use (`priv`, `pub`, `aux`)
   - `channel <String>` The channel to subscribe to
   - `opts <Object>` Additional data to send
 
@@ -672,7 +686,8 @@ via Websocket.
 *Example:*
 
 ```js
-ws.unsubscribe('wallets', { account: 'testuser1431' })
+ws.unsubscribe('priv', 'wallets', { account: 'testuser1431' })
+
 ```
 
 *Sent Payload:*
@@ -712,7 +727,8 @@ ws.on('message', (m) => {
   console.log(m)
 })
 
-ws.send({ event: 'chain' })
+ws.send('pub', { event: 'chain' })
+ws.send('priv', { event: 'chain' })
 ```
 
 *Example response:*
@@ -738,7 +754,8 @@ ws.on('message', (m) => {
   console.log(m)
 })
 
-ws.send({ event: 'pairs' })
+ws.send('pub', { event: 'pairs' })
+ws.send('priv', { event: 'pairs' })
 ```
 
 *Example response:*
@@ -759,7 +776,7 @@ will take care of parsing the snapshots update the state when partial updates ar
 
 For every update, the full updated data is emitted.
 
-#### `sunbeam.onManagedOrderbookUpdate(opts, handler)`
+#### `sunbeam.onManagedOrderbook(opts, handler)`
   - `opts <Object>`
     - `symbol <String>` The symbol to emit the orderbook update for, i.e. `EOX.USDT`
   - `handler <Function>` Called every time the state is updated
@@ -767,42 +784,49 @@ For every update, the full updated data is emitted.
 The input format is `R0`: https://docs.bitfinex.com/v2/reference#ws-public-raw-order-books
 
 If you want to manage state on your own, our just need a stream of updates, use
-the `onOrderBook` handler.
+the `onOrderbook` handler.
 
 *Example:*
 
 ```js
-ws.onManagedOrderbookUpdate({ symbol: 'EOX.USDT' }, (ob) => {
+const pair = 'EOS.USDT'
+
+ws.onManagedOrderbook({ symbol: pair }, (ob) => {
+  console.log(`ws.onManagedOrderbook({ symbol: ${pair} })`)
   console.log(ob)
+
+  ws.unsubscribeOrderbook(pair)
 })
-ws.subscribeOrderBook('EOX.USDT')
 ```
 
 Registered for messages from the corresponding book channel (received on subscribe).
 
-#### `sunbeam.onManagedWalletUpdate(opts, handler)`
+#### `sunbeam.onManagedWallet(opts, handler)`
   - `opts <Object>`
   - `handler <Function>` Called every time the state is updated
 
 *Example:*
 
 ```js
-ws.onManagedWalletUpdate({}, (mw) => {
+ws.onManagedWallet({}, (mw) => {
+  console.log('ws.onManagedWallet')
   console.log(mw)
 })
+
 ws.auth()
 ```
 
 Registered for `ws`, `wu` messages via channel `0`.
+Channel is automatically subscribed by the API when doing an auth.
 
-#### `sunbeam.onManagedOrdersUpdate(filter, handler)`
+#### `sunbeam.onManagedOrders(filter, handler)`
   - `opts <Object>`
   - `handler <Function>` Called every time the state is updated
 
 *Example:*
 
 ```js
-ws.onManagedOrdersUpdate({}, (orders) => {
+ws.onManagedOrders({}, (orders) => {
   console.log(orders)
 })
 ws.auth()
@@ -823,54 +847,80 @@ use unmanaged handlers.
 
 ```js
 ws.onWallet({}, (wu) => {
+  console.log('ws.onWallet')
   console.log(wu)
 })
+
 ws.auth()
 ```
 
 Registered for `ws`, `wu` messages via channel `0`.
+Channel is automatically subscribed by the API when doing an auth.
 
-#### `sunbeam.onOrderUpdate(opts, handler)`
+#### `sunbeam.onOrders(opts, handler)`
   - `opts <Object>`
+      `?symbol <String>` optional: filter by pair
   - `handler <Function>` The callback called for every update
 
 *Example:*
 
 ```js
-ws.onOrderUpdate({}, (data) => {
+const pair = 'EOS.USDT'
+
+ws.onOrders({}, (data) => {
+  console.log('ws.onOrders({})')
   console.log(data)
 })
+
+// filter enabled
+ws.onOrders({ symbol: pair }, (data) => {
+  console.log(`ws.onOrders({ symbol: ${pair} })`)
+  console.log(data)
+})
+
 ws.auth()
 ```
 
 Registered for `os`, `on`, `ou`, `oc` messages via channel `0`.
 
-#### `sunbeam.onPrivateTradeUpdate(opts, handler)`
+#### `sunbeam.onPrivateTrades(opts, handler)`
   - `opts <Object>`
   - `handler <Function>` The callback called for every update
+
+
+Called when an own, submitted order matches.
 
 *Example:*
 
 ```js
-ws.onPrivateTradeUpdate({}, (update) => {
-  console.log('ws.onPrivateTradeUpdate', update)
+ws.onPrivateTrades({}, (data) => {
+  console.log('ws.onPrivateTrades({})')
+  console.log('private trade', data) // emits [ 'ETH.USD', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
 })
+
 ws.auth()
 ```
 
 Registered for `tu`, `te` messages via channel `0`.
 
-#### `sunbeam.onPublicTradeUpdate(opts, handler)`
+#### `sunbeam.onPublicTrades(opts, handler)`
   - `opts <Object>`
-    - `symbol <String>` The symbol to emit the public trade updates for, i.e. `EOX.USDT`
+    - `?symbol <String>` optional: the symbol to emit the public trade updates for, i.e. `EOX.USDT`
   - `handler <Function>` The callback called for every update
 
 *Example:*
 
 ```js
-ws.onPublicTradeUpdate({ symbol: 'EOX.USDT' }, (data) => {
-  console.log('ws.onPublicTradeUpdate({ symbol: "EOX.USDT" }')
-  console.log(data) // emits [ 'EOX.USDT', 'te', [ '3', 1537196302500, -0.9, 1 ] ]
+const pair = 'EOS.USDT'
+
+ws.onPublicTrades({}, (data) => {
+  console.log(`ws.onPublicTrades({})`)
+  console.log('public trade', data)
+})
+
+ws.onPublicTrades({ symbol: pair }, (data) => {
+  console.log(`ws.onPublicTrades({ symbol: ${pair} })`)
+  console.log('public trade', data)
 })
 
 ws.subscribePublicTrades('EOX.USDT')
@@ -879,7 +929,7 @@ ws.subscribePublicTrades('EOX.USDT')
 Registered for `tu`, `te` messages via the corresponding channel for the symbol.
 
 
-#### `sunbeam.onOrderBook(opts, handler)`
+#### `sunbeam.onOrderbook(opts, handler)`
   - `opts <Object>`
     - `symbol <String>` The symbol to emit the orderbook update for, i.e. `EOX.USDT`
   - `handler <Function>` The callback called for every update
@@ -889,10 +939,14 @@ Just emits order updates and order snapshots without keeping or managing state.
 *Example:*
 
 ```js
-ws.onOrderBook({ symbol: 'EOX.USDT' }, (ob) => {
+const pair = 'EOS.USDT'
+
+ws.onOrderbook({ symbol: pair }, (ob) => {
+  console.log(`ws.onOrderbook({ symbol: ${pair} })`)
   console.log(ob)
 })
-ws.subscribeOrderBook('EOX.USDT')
+
+ws.subscribeOrderbook(pair)
 ```
 
 Registered for messages from the corresponding book channel (received on subscribe).
@@ -900,13 +954,11 @@ Registered for messages from the corresponding book channel (received on subscri
 ## Standalone Managed State Helper
 
 Sunbeam can take care of managing state snapshots for you, and keeps them up to date when the API sends updates.
-Sometimes you may want to interact with Sunbeam's managed state. They are exposed through a method:
+Sometimes you may want to interact with Sunbeam's managed state. They are exposed through `this.state`
 
 ```js
 
-sb.getManagedStateComponent('wallet')
-sb.getManagedStateComponent('orders')
-sb.getManagedStateComponent('books', 'EOX.USDT')
+ws.state
 ```
 
 ## Setup your node
