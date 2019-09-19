@@ -1,6 +1,6 @@
 {
   "name": "sunbeam",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "JS lib for eosfinex",
   "main": "lib/index.js",
   "scripts": {
