@@ -5,9 +5,9 @@
 const Orders = require('../lib/managed-orders.js')
 const assert = require('assert')
 
-const snapMsg = [ '0',
+const snapMsg = ['0',
   'os',
-  [ [ '18446744073709551615',
+  [['18446744073709551615',
     null,
     12345,
     'BTC.USD',
@@ -38,8 +38,8 @@ const snapMsg = [ '0',
     'API>EFX',
     null,
     null,
-    null ],
-  [ '18446744073709551615',
+    null],
+  ['18446744073709551615',
     null,
     1536247370903,
     'ETH.USD',
@@ -70,21 +70,21 @@ const snapMsg = [ '0',
     'API>EFX',
     null,
     null,
-    null ] ] ]
+    null]]]
 
-const emptySnapMsg = [ '0', 'os', [] ]
+const emptySnapMsg = ['0', 'os', []]
 
 const onMsg = ['0', 'on', [
   '1', null, 1234578910, 'BTC.USD', 1536325337500752,
   1536325337500752, -1.000000, -1.000000, 'LIMIT', null, null, null, 0,
   'ACTIVE', null, null, 500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
-  'API>EFX', null, null, null ]]
+  'API>EFX', null, null, null]]
 
 const onMsgEOS = ['0', 'on', [
   '1', null, 1234578910, 'EOS.USD', 1536325337500752,
   1536325337500752, -1.000000, -1.000000, 'LIMIT', null, null, null, 0,
   'ACTIVE', null, null, 500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
-  'API>EFX', null, null, null ]]
+  'API>EFX', null, null, null]]
 
 const ouMsg = ['0', 'ou', [
   '1', null, 1234578910, 'BTC.USD', 1536325337500612, 1536325337500612,
@@ -92,10 +92,10 @@ const ouMsg = ['0', 'ou', [
   500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
   'API>EFX', null, null, null]]
 
-const ocMsg = [ '0', 'oc', [
+const ocMsg = ['0', 'oc', [
   '1', null, 1234578910, 'BTC.USD', 1547142966504439,
   1547143021501823, 0, 10.99, 'LIMIT', null, null, null, 0, 'fully.filled', null, null,
-  3, 0, 0, 0, null, null, null, 0, 0, 0, null, null, 'API>EFX', null, null, null ], 1 ]
+  3, 0, 0, 0, null, null, null, 0, 0, 0, null, null, 'API>EFX', null, null, null], 1]
 
 describe('orders helper', () => {
   it('takes snapshots', () => {
@@ -122,7 +122,7 @@ describe('orders helper', () => {
     o.update(onMsgEOS)
 
     const snap = snapMsg[2]
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsgEOS[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], onMsgEOS[2]])
   })
 
   it('update on - new order', () => {
@@ -131,7 +131,7 @@ describe('orders helper', () => {
     o.update(onMsg)
 
     const snap = snapMsg[2]
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], onMsg[2]])
   })
 
   it('update ou', () => {
@@ -141,11 +141,11 @@ describe('orders helper', () => {
     const snap = snapMsg[2]
     // add order
     o.update(onMsg)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], onMsg[2]])
 
     // update it
     o.update(ouMsg)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], ouMsg[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], ouMsg[2]])
   })
 
   it('update oc', () => {
@@ -155,12 +155,12 @@ describe('orders helper', () => {
     const snap = snapMsg[2]
     // add order
     o.update(onMsg)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], onMsg[2]])
 
     // delete it
     o.update(ocMsg)
 
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1]])
   })
 
   it('update oc, mark deleted', () => {
@@ -170,7 +170,7 @@ describe('orders helper', () => {
     const snap = snapMsg[2]
     // add order
     o.update(onMsg)
-    assert.deepStrictEqual(o.getState(), [ snap[0], snap[1], onMsg[2] ])
+    assert.deepStrictEqual(o.getState(), [snap[0], snap[1], onMsg[2]])
     assert.strictEqual(o.getState().length, 3)
 
     // delete it
@@ -210,14 +210,14 @@ describe('orders helper', () => {
 
     assert.strictEqual(o.getState().length, 3)
     const exp = {
-      'id': '1',
-      'clientId': 1234578910,
-      'symbol': 'BTC.USD',
-      'amount': -1,
-      'origAmount': -1,
-      'type': 'LIMIT',
-      'status': 'ACTIVE',
-      'price': 500
+      id: '1',
+      clientId: 1234578910,
+      symbol: 'BTC.USD',
+      amount: -1,
+      origAmount: -1,
+      type: 'LIMIT',
+      status: 'ACTIVE',
+      price: 500
     }
 
     assert.deepStrictEqual(o.getState()[2], exp)
@@ -230,14 +230,14 @@ describe('orders helper', () => {
 
     assert.strictEqual(o.getState().length, 3)
     const exp = {
-      'id': '1',
-      'clientId': 1234578910,
-      'symbol': 'BTC.USD',
-      'amount': -1,
-      'origAmount': -1,
-      'type': 'LIMIT',
-      'status': 'ACTIVE',
-      'price': 500
+      id: '1',
+      clientId: 1234578910,
+      symbol: 'BTC.USD',
+      amount: -1,
+      origAmount: -1,
+      type: 'LIMIT',
+      status: 'ACTIVE',
+      price: 500
     }
 
     assert.deepStrictEqual(o.getState()[2], exp)
@@ -246,14 +246,14 @@ describe('orders helper', () => {
     o.update(ouMsg)
 
     const expUpdt = {
-      'id': '1',
-      'clientId': 1234578910,
-      'symbol': 'BTC.USD',
-      'amount': -10,
-      'origAmount': -10,
-      'type': 'LIMIT',
-      'status': 'ACTIVE',
-      'price': 500
+      id: '1',
+      clientId: 1234578910,
+      symbol: 'BTC.USD',
+      amount: -10,
+      origAmount: -10,
+      type: 'LIMIT',
+      status: 'ACTIVE',
+      price: 500
     }
 
     assert.deepStrictEqual(o.getState()[2], expUpdt)
