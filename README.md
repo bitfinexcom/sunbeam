@@ -116,8 +116,8 @@ const opts = {
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
-    tokenContract: 'eosio.token', // Paper sidechain token contract
-    exchangeContract: 'eosfinex', // Paper sidechain exchange contract
+    tokenContract: 'eosio.token', // Prod sidechain token contract
+    exchangeContract: 'eosfinex', // Prod sidechain exchange contract
     auth: {
       keys: {
         account: '', // accountname to use
@@ -148,9 +148,6 @@ ws.on('open', () => {
 
 ws.open()
 ```
-
-For an example how to prefetch the contract abis to avoid the initial
-HTTP request to an eos node, see [example-prefetched-abi-ws.js](example-prefetched-abi-ws.js).
 
 For an example how to use Scatter for auth, see [example-scatter.js](example-scatter.js).
 
@@ -363,7 +360,7 @@ The ABI is publicly available via `cleos` or curl:
 
 ```
 curl --request POST \
-  --url https://api-paper.eosfinex.com/v1/chain/get_abi \
+  --url https://api.eosfinex.com/v1/chain/get_abi \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --data '{"account_name":"eosfinex"}'
