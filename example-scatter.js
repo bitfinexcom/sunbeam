@@ -37,7 +37,9 @@ const client = {
 }
 
 const conf = {
-  url: 'wss://api-paper.eosfinex.com/ws/',
+  urls: {
+    priv: 'wss://api-paper.eosfinex.com/ws/'
+  },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
