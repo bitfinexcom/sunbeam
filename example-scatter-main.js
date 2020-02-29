@@ -22,7 +22,7 @@ const { Api, JsonRpc } = require('eosjs')
 const fetch = require('node-fetch')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'http://node'
+const httpEndpoint = '__INSERT__ENDPOINT__'
 
 const rpc = new JsonRpc(httpEndpoint, { fetch })
 const api = new Api({
@@ -38,11 +38,11 @@ const client = {
 
 const conf = {
   urls: {
-    priv: 'priv'
+    priv: '__INSERT_ENDPOINT__'
   },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
-    httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
+    httpEndpoint, // used to get metadata for signing transactions
     tokenContract: 'eosio.token', // Paper sidechain token contract
     exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
@@ -61,7 +61,7 @@ const conf = {
 }
 
 const ws = new Sunbeam(client, conf)
-const pair = 'EOS.USDT'
+const pair = 'tBTCUSD'
 ws.on('message', (m) => {
   console.log(m)
 })
@@ -74,13 +74,13 @@ ws.on('error', (m) => {
 ws.on('open', async () => {
   const tos = 'TOS v1'
   ws.acceptTos(tos)
-  console.log(await ws.auth())
+  await ws.auth()
 
   const order = {
     symbol: pair,
     price: '1',
     amount: '-0.01',
-    type: 'EXCHANGE_LIMIT',
+    type: 'EXCHANGE LIMIT',
     clientId: '1332'
   }
 
