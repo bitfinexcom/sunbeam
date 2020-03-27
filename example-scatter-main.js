@@ -84,7 +84,7 @@ ws.on('open', async () => {
     clientId: '1332'
   }
 
-  const { payload, data } = await ws.place(order)
+  await ws.place(order)
 })
 
 ws.open()
