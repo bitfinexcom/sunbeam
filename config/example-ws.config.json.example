@@ -8,7 +8,7 @@
       "aux": "ws://__API__"
     },
     "eos": {
-      "expireInSeconds": 3600,
+      "expireInSeconds": 129600,
       "httpEndpoint": "http://__API__",
       "auth": {
         "keys": {

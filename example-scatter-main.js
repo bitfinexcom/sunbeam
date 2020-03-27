@@ -22,7 +22,7 @@ const { Api, JsonRpc } = require('eosjs')
 const fetch = require('node-fetch')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'https://api-paper.eosfinex.com'
+const httpEndpoint = '__INSERT__ENDPOINT__'
 
 const rpc = new JsonRpc(httpEndpoint, { fetch })
 const api = new Api({
@@ -38,11 +38,11 @@ const client = {
 
 const conf = {
   urls: {
-    priv: 'wss://api-paper.eosfinex.com/ws/'
+    priv: '__INSERT_ENDPOINT__'
   },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
-    httpEndpoint: httpEndpoint, // used to get metadata for signing transactions
+    httpEndpoint, // used to get metadata for signing transactions
     tokenContract: 'eosio.token', // Paper sidechain token contract
     exchangeContract: 'eosfinex', // Paper sidechain exchange contract
     auth: {
@@ -61,7 +61,7 @@ const conf = {
 }
 
 const ws = new Sunbeam(client, conf)
-
+const pair = 'tBTCUSD'
 ws.on('message', (m) => {
   console.log(m)
 })
@@ -72,48 +72,19 @@ ws.on('error', (m) => {
 })
 
 ws.on('open', async () => {
-  console.log(await ws.auth())
-  console.log(await ws.auth()) // cached
-
-  ws.onOrderBook({ symbol: 'EOX.PUSDT' }, (ob) => {
-    console.log('ws.onOrderBook({ symbol: "EOX.PUSD" }')
-    console.log(ob)
-  })
-
-  ws.subscribeOrderBook('IQX.USD')
+  const tos = 'TOS v1'
+  ws.acceptTos(tos)
+  await ws.auth()
 
   const order = {
-    symbol: 'EOX.PUSD',
+    symbol: pair,
     price: '1',
-    amount: '1',
-    type: 'EXCHANGE_LIMIT'
+    amount: '-0.01',
+    type: 'EXCHANGE LIMIT',
+    clientId: '1332'
   }
 
-  const { payload, data } = await ws.place(order)
-  ws.cancel({
-    symbol: 'EOX.PUSD',
-    side: 'bid',
-    id: '18446744073709551606',
-    clientId: '1540306547501022'
-  })
-
-  console.log(payload, data)
-
-/*
-  ws.deposit({
-    currency: 'EOX',
-    amount: '2'
-  })
-
-  ws.withdraw({
-    currency: 'EOX',
-    amount: '0.678'
-  })
-
-  ws.sweep({
-    currency: 'EOX'
-  })
-*/
+  await ws.place(order)
 })
 
 ws.open()
