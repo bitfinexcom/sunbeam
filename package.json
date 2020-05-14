@@ -38,7 +38,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.0.0",
-    "big.js": "^5.1.2",
     "cbq": "git+https://github.com/bitfinexcom/cbq-js.git",
     "eosjs": "^20.0.0",
     "isomorphic-ws": "^4.0.1",

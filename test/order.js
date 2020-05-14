@@ -7,7 +7,7 @@ const assert = require('assert')
 
 const conf = {}
 
-describe('order helper', () => {
+xdescribe('order helper', () => {
   it('sets bid and ask scope', () => {
     const ask = new Order({
       symbol: 'BTC.USD',
