@@ -46,14 +46,14 @@ describe('managed state - sub unsub, state stays nice', () => {
         wss.send(ws, {
           event: 'subscribed',
           channel: 'book',
-          chanId: 'BTC.USD',
-          symbol: 'BTC.USD'
+          chanId: 'tBTCUSD',
+          symbol: 'tBTCUSD'
         })
 
         setTimeout(() => {
           // simulate ob snapshot
           wss.send(ws, [
-            'BTC.USD',
+            'tBTCUSD',
             data
           ])
         }, 50)
@@ -67,7 +67,7 @@ describe('managed state - sub unsub, state stays nice', () => {
       if (msg.event === 'unsubscribe') {
         subscriptions++
 
-        sws.subscribeOrderbook('BTC.USD')
+        sws.subscribeOrderbook('tBTCUSD')
         sendDelayedSub(snapNew, 50)
       }
     }
@@ -77,11 +77,11 @@ describe('managed state - sub unsub, state stays nice', () => {
     }
 
     sws.on('open', () => {
-      sws.subscribeOrderbook('BTC.USD')
+      sws.subscribeOrderbook('tBTCUSD')
     })
 
     let count = 0
-    sws.onOrderbook({ symbol: 'BTC.USD' }, (ob) => {
+    sws.onOrderbook({ symbol: 'tBTCUSD' }, (ob) => {
       if (count === 1) {
         count++
       }
@@ -89,7 +89,7 @@ describe('managed state - sub unsub, state stays nice', () => {
       if (count === 0) {
         assert.deepStrictEqual(ob, snap)
         count++
-        sws.unsubscribeOrderbook('BTC.USD')
+        sws.unsubscribeOrderbook('tBTCUSD')
       }
 
       if (count === 2) {
