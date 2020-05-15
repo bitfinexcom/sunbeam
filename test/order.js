@@ -5,171 +5,103 @@
 const Order = require('../lib/order.js')
 const assert = require('assert')
 
-const conf = {}
+const conf = {
+  seskey1: 123,
+  seskey2: 456
+}
 
-xdescribe('order helper', () => {
-  it('sets bid and ask scope', () => {
+describe('order helper', () => {
+  it('casts amount and price to string', () => {
     const ask = new Order({
-      symbol: 'BTC.USD',
-      price: '520',
-      amount: '-0.99',
-      type: 'EXCHANGE_LIMIT'
+      symbol: 'tBTCUSD',
+      price: 520,
+      amount: -0.99,
+      type: 'EXCHANGE LIMIT'
     }, conf)
 
-    assert.strictEqual(ask.parse().scope, 'btc.usd.a')
-    assert.strictEqual(ask.parse().amount, '9900')
-
-    const bid = new Order({
-      symbol: 'BTC.USD',
-      price: '520',
-      amount: '0.99',
-      type: 'EXCHANGE_LIMIT'
-    }, conf)
-
-    assert.strictEqual(bid.parse().scope, 'btc.usd.b')
-    assert.strictEqual(bid.parse().amount, '9900')
+    assert.strictEqual(typeof ask.parsed.price, 'string')
+    assert.strictEqual(typeof ask.parsed.amount, 'string')
   })
 
-  it('client id is timestamp by default', () => {
+  it('omits gid if not passed', () => {
     const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_MARKET'
+      symbol: 'tBTCUSD',
+      price: 520,
+      amount: -0.99,
+      type: 'EXCHANGE LIMIT'
     }, conf)
 
+    assert.strictEqual(typeof ask.parsed.gid, 'undefined')
+  })
+
+  it('casts gid to number', () => {
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      price: 520,
+      amount: -0.99,
+      type: 'EXCHANGE LIMIT',
+      gid: '123'
+    }, conf)
+
+    assert.strictEqual(typeof ask.parsed.gid, 'number')
+  })
+
+  it('sets client id to timestamp by default', () => {
     const d = Date.now()
-    ask.parse()
-
-    assert.ok(ask.serialize().clId >= d)
-  })
-
-  it('market order sets flags', () => {
     const ask = new Order({
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: '-0.99',
-      type: 'EXCHANGE_MARKET'
+      price: 520,
+      type: 'EXCHANGE MARKET'
     }, conf)
 
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 4)
+    assert.ok(ask.parsed.cid - d >= 0 && ask.parsed.cid - d <= 1000)
   })
 
-  it('market order flag set respects existing flags', () => {
+  it('sets flags to 0 by default', () => {
     const ask = new Order({
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: '-0.99',
-      type: 'EXCHANGE_MARKET',
-      flags: 1 // post only
+      price: 520,
+      type: 'EXCHANGE MARKET'
     }, conf)
 
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 5)
+    assert.strictEqual(ask.parsed.flags, 0)
   })
 
-  it('market order flag works with order type market order', () => {
+  it('builds message object from parsed value', () => {
     const ask = new Order({
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: '-0.99',
-      type: 'EXCHANGE_MARKET',
+      price: 520,
+      type: 'EXCHANGE MARKET'
+    }, conf)
+
+    assert.deepStrictEqual(ask.getMsgObj(), {
+      cid: ask.parsed.cid,
+      type: 'EXCHANGE MARKET',
+      symbol: 'tBTCUSD',
+      price: '520',
+      amount: '-0.99'
+    })
+  })
+
+  it('serializes order data', () => {
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      amount: '-0.99',
+      price: '440',
+      type: 'EXCHANGE MARKET',
       flags: 4
     }, conf)
+    const d = Date.now()
+    const { order } = ask.serialize()
 
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 4)
-  })
-
-  it('post only flag works', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_LIMIT',
-      flags: 1
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 1)
-  })
-
-  it('post only via prop supported', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_LIMIT',
-      postOnly: true
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 1)
-  })
-
-  it('post only via prop + flag is ok', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_LIMIT',
-      postOnly: true,
-      flags: 5 // 1 + 4
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 5)
-  })
-
-  it('postOnly prop overrides flag', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_LIMIT',
-      postOnly: true,
-      flags: 0
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 1)
-  })
-
-  it('price must be always present', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_MARKET',
-      flags: 1
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().price, '0')
-  })
-
-  it('EXCHANGE_IOC order sets flags', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_IOC'
-    }, conf)
-
-    ask.parse()
-
-    assert.strictEqual(ask.serialize().flags, 2)
-  })
-
-  it('EXCHANGE_IOC order sets flags, collision with market order', () => {
-    const ask = new Order({
-      symbol: 'BTC.USD',
-      amount: '-0.99',
-      type: 'EXCHANGE_IOC',
-      flags: 4
-    }, conf)
-
-    assert.throws(() => {
-      ask.parse()
-    }, { message: /overload/ })
+    assert.ok(order.nonce - d >= 0 && order.nonce - d <= 1000)
+    assert.strictEqual(order.seskey1, conf.seskey1)
+    assert.strictEqual(order.seskey2, conf.seskey2)
+    assert.strictEqual(order.price, '440.0000000000 USD')
+    assert.strictEqual(order.amount, '-0.9900000000 BTC')
+    assert.strictEqual(order.flags, 4)
   })
 })
