@@ -125,4 +125,23 @@ describe('order helper', () => {
     assert.strictEqual(order.amount, '-0.9900000000 BTC')
     assert.strictEqual(order.flags, 0)
   })
+
+  it('converts UST to USDT in order object', () => {
+    const ask = new Order({
+      symbol: 'tBTCUST',
+      amount: '-0.99',
+      price: '440',
+      type: 'EXCHANGE MARKET',
+      flags: 4
+    }, conf)
+    const d = Date.now()
+    const { order } = ask.serialize()
+
+    assert.ok(order.nonce - d >= 0 && order.nonce - d <= 1000)
+    assert.strictEqual(order.seskey1, conf.seskey1)
+    assert.strictEqual(order.seskey2, conf.seskey2)
+    assert.strictEqual(order.price, '440.0000000000 USDT')
+    assert.strictEqual(order.amount, '-0.9900000000 BTC')
+    assert.strictEqual(order.flags, 4)
+  })
 })
