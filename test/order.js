@@ -132,7 +132,7 @@ describe('order helper', () => {
       amount: '-0.99',
       price: '440',
       type: 'EXCHANGE MARKET',
-      flags: 4
+      flags: 4096
     }, conf)
     const d = Date.now()
     const { order } = ask.serialize()
@@ -142,6 +142,6 @@ describe('order helper', () => {
     assert.strictEqual(order.seskey2, conf.seskey2)
     assert.strictEqual(order.price, '440.0000000000 USDT')
     assert.strictEqual(order.amount, '-0.9900000000 BTC')
-    assert.strictEqual(order.flags, 4)
+    assert.strictEqual(order.flags, 1)
   })
 })
