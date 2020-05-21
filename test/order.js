@@ -74,7 +74,8 @@ describe('order helper', () => {
       symbol: 'tBTCUSD',
       amount: '-0.99',
       price: 520,
-      type: 'EXCHANGE MARKET'
+      type: 'EXCHANGE MARKET',
+      flags: 4096
     }, conf)
 
     assert.deepStrictEqual(ask.getMsgObj(), {
@@ -82,17 +83,18 @@ describe('order helper', () => {
       type: 'EXCHANGE MARKET',
       symbol: 'tBTCUSD',
       price: '520',
-      amount: '-0.99'
+      amount: '-0.99',
+      flags: 4096
     })
   })
 
-  it('serializes order data', () => {
+  it('sets meta flag for exchange market order type', () => {
     const ask = new Order({
       symbol: 'tBTCUSD',
       amount: '-0.99',
       price: '440',
       type: 'EXCHANGE MARKET',
-      flags: 4
+      flags: 4096
     }, conf)
     const d = Date.now()
     const { order } = ask.serialize()
@@ -102,6 +104,25 @@ describe('order helper', () => {
     assert.strictEqual(order.seskey2, conf.seskey2)
     assert.strictEqual(order.price, '440.0000000000 USD')
     assert.strictEqual(order.amount, '-0.9900000000 BTC')
-    assert.strictEqual(order.flags, 4)
+    assert.strictEqual(order.flags, 1)
+  })
+
+  it('sets meta flag for other order types', () => {
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      amount: '-0.99',
+      price: '440',
+      type: 'another',
+      flags: 4096
+    }, conf)
+    const d = Date.now()
+    const { order } = ask.serialize()
+
+    assert.ok(order.nonce - d >= 0 && order.nonce - d <= 1000)
+    assert.strictEqual(order.seskey1, conf.seskey1)
+    assert.strictEqual(order.seskey2, conf.seskey2)
+    assert.strictEqual(order.price, '440.0000000000 USD')
+    assert.strictEqual(order.amount, '-0.9900000000 BTC')
+    assert.strictEqual(order.flags, 0)
   })
 })
