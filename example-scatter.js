@@ -22,7 +22,7 @@ const { Api, JsonRpc } = require('eosjs')
 const fetch = require('node-fetch')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'https://api-paper.eosfinex.com'
+const httpEndpoint = 'https://api.eosfinex.com'
 
 const rpc = new JsonRpc(httpEndpoint, { fetch })
 const api = new Api({
@@ -38,13 +38,12 @@ const client = {
 
 const conf = {
   urls: {
-    priv: 'wss://api-paper.eosfinex.com/ws/'
+    priv: 'wss://api.eosfinex.com/ws'
   },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint, // used to get metadata for signing transactions
-    tokenContract: 'eosio.token', // Paper sidechain token contract
-    exchangeContract: 'eosfinextest', // Paper sidechain exchange contract
+    exchangeContract: 'eosfinextest', // exchange contract name
     auth: {
       scatter: {
         ScatterJS,
@@ -123,10 +122,20 @@ ws.on('open', async () => {
     console.log('private trade', data)
   })
 
+  /* const { txResult, txData } = await ws.deposit({
+    currency: 'BTC',
+    amount: '0.687'
+  })
+
+  const { txResult, txData } = await ws.withdraw({
+    currency: 'BTC',
+    amount: '0.02'
+  }) */
+
   // available types: EXCHANGE MARKET, EXCHANGE LIMIT, EXCHANGE STOP, EXCHANGE STOP LIMIT, EXCHANGE TRAILING STOP, EXCHANGE FOK, EXCHANGE IOC
   const order = {
     symbol: pair,
-    price: '900',
+    price: '8100',
     amount: '-0.01',
     type: 'EXCHANGE LIMIT',
     clientId: '1332'

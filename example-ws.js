@@ -97,6 +97,16 @@ ws.on('open', async () => {
     console.log('private trade', data)
   })
 
+  /* const { txResult, txData } = await ws.deposit({
+    currency: 'BTC',
+    amount: '0.687'
+  })
+
+  const { txResult, txData } = await ws.withdraw({
+    currency: 'BTC',
+    amount: '0.02'
+  }) */
+
   // available types: EXCHANGE MARKET, EXCHANGE LIMIT, EXCHANGE STOP, EXCHANGE STOP LIMIT, EXCHANGE TRAILING STOP, EXCHANGE FOK, EXCHANGE IOC
   const order = {
     symbol: pair,
