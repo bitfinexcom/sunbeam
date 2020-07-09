@@ -51,6 +51,16 @@ ws.on('open', async () => {
   await ws.auth()
 
   ws.send('priv', { event: 'chain' })
+  // or const meta = await ws.requestChainMeta('priv')
+  ws.send('priv', { event: 'symbols' })
+
+  ws.subscribePublicTrades(pair)
+  ws.subscribeOrderbook(pair)
+
+  setTimeout(() => {
+    ws.unsubscribePublicTrades(pair)
+    ws.unsubscribeOrderbook(pair)
+  }, 3000)
 
   ws.onOrderbook({ symbol: pair }, (ob) => {
     console.log(`ws.onOrderbook({ symbol: ${pair} })`)
@@ -119,11 +129,12 @@ ws.on('open', async () => {
   await ws.place(order)
 
   setTimeout(() => {
+    console.log('state', JSON.stringify(ws.state, null, 2))
     const a = placedOrders[0]
     if (a) {
       ws.cancel({ id: Number(a) })
     }
-  }, 2000)
+  }, 4000)
 })
 
 ws.open()
