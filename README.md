@@ -118,7 +118,7 @@ const opts = {
   eos: {
     expireInSeconds: 7 * 24 * 60 * 60, // 7 days
     httpEndpoint, // Used to get metadata for signing transactions
-    exchangeContract: 'eosfinex', // Name of the exchange contract
+    exchangeContract: 'eosfinexeos1', // Name of the exchange contract
     auth: {
       keys: {
         account: '', // Account name to use
@@ -345,7 +345,7 @@ curl --request POST \
   --url https://api.eosfinex.com/v1/chain/get_abi \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
-  --data '{"account_name":"eosfinex"}'
+  --data '{"account_name":"eosfinexeos1"}'
 ```
 
 After signing, the transaction is sent to the Websocket server:
