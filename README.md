@@ -32,7 +32,7 @@ import Sunbeam from 'sunbeam/dist'
 
 On paper trading tokens are generally prefixed by `P`. So `BTC` becomes
 `PBTC`. The only exception is the resource token `EOX`. For a list of
-available trading pairs, see [#trade-pairs](#trade-pairs).
+available trading pairs, see [trade-pairs](#trading-pairs).
 
 ## Examples
 
@@ -316,9 +316,13 @@ to the Websocket endpoint.
 To be able to identify the order, a client **MUST** send a custom client id with it
 that must be unique to the clients orders.
 
+##### Price deviation
+
 The following Websocket message is sent on authentication and contains the maximum possible 
-price deviation from the best price when placing an order`{ event: 'pl', val: 0.1 }`. 
-If the price in the `order` exceed the deviation, an error event will be generated.
+price deviation from the best price when placing an order`{ event: 'pl', val: 0.1 }`.
+For example, if the best price is 10 and deviation is 0.1, you won't be able to place a buy order for the price 
+less than 10 - 10 * 0.1 = 9. 
+If the price in the `order` exceeds the deviation, an error event will be generated.
 
 ##### List of available flags
 
@@ -417,7 +421,7 @@ The request will be signed locally using the `eosjs` module.
                 }]
 ```
 
-`<transaction data>` is a signed transaction payload in array notation for the `place` [action of the **exchange contract**](#abi).
+`<transaction data>` is a signed transaction payload in array notation for the `place` [action of the **exchange contract**](#signing).
 
 #### `sunbeam.cancel(data) => Promise`
 
@@ -499,7 +503,7 @@ The request will be [signed locally](#signing) using the `eosjs` module.
 
 #### `sunbeam.subscribe(transport, channel, ?opts)`
   - `transport <String>` The Websocket transport to use (`priv`, `pub`, `aux`)
-  - `channel <String>` The channel to subscribe to
+  - `channel <String>` The channel name to subscribe to
   - `opts <Object>` Additional data to send
 
 
@@ -535,7 +539,7 @@ Channel `book` is available for `pub` and represents orderbook information. See 
 
 #### `sunbeam.unsubscribe(transport, channel, ?opts)`
   - `transport <String>` The Websocket transport to use (`priv`, `pub`, `aux`)
-  - `channel <String>` The channel to subscribe to
+  - `channel <String>` The channel name or channel id to unsubscribe from
   - `opts <Object>` Additional data to send
 
 Unsubscribes from a channel.
