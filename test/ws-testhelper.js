@@ -9,7 +9,6 @@ class Server extends EventEmitter {
 
     this.port = opts.port
     this.wss = new WebSocket.Server(opts)
-    this.channels = {}
 
     this.wss.on('connection', (ws) => {
       this.emit('connection', ws)
