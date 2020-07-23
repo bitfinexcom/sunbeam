@@ -38,13 +38,13 @@ const client = {
 
 const conf = {
   urls: {
-    priv: 'wss://api-paper.eosfinex.com/ws/'
+    priv: 'wss://api-paper.eosfinex.com/ws',
+    pub: 'wss://api.bitfinex.com/ws/2'
   },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint, // used to get metadata for signing transactions
-    tokenContract: 'eosio.token', // Paper sidechain token contract
-    exchangeContract: 'eosfinextest', // Paper sidechain exchange contract
+    exchangeContract: 'eosfinextest', // exchange contract name
     auth: {
       scatter: {
         ScatterJS,
@@ -77,6 +77,16 @@ ws.on('open', async () => {
   console.log(await ws.auth())
 
   ws.send('priv', { event: 'chain' })
+  // or const meta = await ws.requestChainMeta('priv')
+  ws.send('priv', { event: 'symbols' })
+
+  ws.subscribePublicTrades(pair)
+  ws.subscribeOrderbook(pair)
+
+  setTimeout(() => {
+    ws.unsubscribePublicTrades(pair)
+    ws.unsubscribeOrderbook(pair)
+  }, 3000)
 
   ws.onOrderbook({ symbol: pair }, (ob) => {
     console.log(`ws.onOrderbook({ symbol: ${pair} })`)
@@ -123,23 +133,39 @@ ws.on('open', async () => {
     console.log('private trade', data)
   })
 
+  ws.onPublicTrades({}, (data) => {
+    console.log('ws.onPublicTrades({})')
+    console.log('public trade', data)
+  })
+
+  /* const { txResult, txData } = await ws.deposit({
+    currency: 'BTC',
+    amount: '0.687'
+  })
+
+  const { txResult, txData } = await ws.withdraw({
+    currency: 'BTC',
+    amount: '0.02'
+  }) */
+
   // available types: EXCHANGE MARKET, EXCHANGE LIMIT, EXCHANGE STOP, EXCHANGE STOP LIMIT, EXCHANGE TRAILING STOP, EXCHANGE FOK, EXCHANGE IOC
   const order = {
     symbol: pair,
-    price: '900',
+    price: '11100',
     amount: '-0.01',
     type: 'EXCHANGE LIMIT',
-    clientId: '1332'
+    cid: '1332'
   }
 
   await ws.place(order)
 
   setTimeout(() => {
+    console.log('state', JSON.stringify(ws.state, null, 2))
     const a = placedOrders[0]
     if (a) {
       ws.cancel({ id: Number(a) })
     }
-  }, 2000)
+  }, 4000)
 })
 
 ws.open()
