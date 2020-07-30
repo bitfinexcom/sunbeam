@@ -535,7 +535,8 @@ ws.subscribe('priv', 'wallets', { account: 'testuser1431' })
 }
 ```
 
-Channel `book` is available for `pub` and represents orderbook information. See https://docs.bitfinex.com/reference#ws-public-books
+Channel `book` is available for `pub` and represents orderbook information. 
+See [bitfinex docs](https://docs.bitfinex.com/reference#ws-public-books) for more details.
 
 #### `sunbeam.unsubscribe(transport, channel, ?opts)`
   - `transport <String>` The Websocket transport to use (`priv`, `pub`, `aux`)
@@ -610,7 +611,7 @@ const meta = await ws.requestChainMeta('priv')
 ```
 
 ##### Trading pairs - { event: 'si' }
-
+<a id="trading-pairs" />
 Returns available trading pairs and their properties.
 
 *Example:*
@@ -682,7 +683,7 @@ Public orderbook data is available via Bitfinex Websocket connection.*
     - `symbol <String>` The symbol to emit the orderbook update for, i.e. `tBTCUST`
   - `handler <Function>` Called every time the state is updated
 
-The input format is `R0`: https://docs.bitfinex.com/reference#ws-public-raw-books
+The input format is `R0`: see [bitfinex docs](https://docs.bitfinex.com/reference#ws-public-raw-books) for more details
 
 If you want to manage state on your own, our just need a stream of updates, use
 the `onOrderbook` handler.
