@@ -2,7 +2,10 @@
 
 const Sunbeam = require('.')
 const UALPrivateKey = require('./ual-privatekey/PrivateKeyUser')
-const config = require('./config/example-ws.config.json')
+const config = require('./config/example-ual.config.json')
+
+const env = 'staging'
+const opts = config[env]
 
 const fetch = require('node-fetch')
 
@@ -10,9 +13,7 @@ const fetch = require('node-fetch')
 const { Api, JsonRpc } = require('eosjs')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'https://test-api.eosfinex.com'
-
-const rpc = new JsonRpc(httpEndpoint, { fetch })
+const rpc = new JsonRpc(opts.eos.httpEndpoint, { fetch })
 const api = new Api({
   rpc,
   textDecoder: new TextDecoder(),
@@ -24,29 +25,9 @@ const client = {
   api
 }
 
-const conf = {
-  urls: {
-    priv: 'wss://test-api.eosfinex.com/ws',
-    pub: 'wss://api.staging.bitfinex.com/ws/2'
-  },
-  eos: {
-    expireInSeconds: 60 * 60, // 1 hour,
-    httpEndpoint, // used to get metadata for signing transactions
-    exchangeContract: 'eosfinextest', // exchange contract name
-    auth: {}
-  },
-  transform: {
-    orderbook: { keyed: true },
-    wallet: {},
-    orders: { keyed: true }
-  }
-}
-const accountName = 'eosfinextt22'
-const privateKey = '5KXSaoq3rWRTUSxWuPnizWpruLoAvNZvQVttKR7ibiLyNpvsvAp'
+const ualUser = new UALPrivateKey(rpc, opts.auth.ual.accountName, opts.auth.ual.privateKey)
 
-const ualUser = new UALPrivateKey(rpc, accountName, privateKey)
-
-const ws = new Sunbeam(client, conf)
+const ws = new Sunbeam(client, opts)
 
 ws.setAuth({
   client: {
