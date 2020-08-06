@@ -1,28 +1,16 @@
 'use strict'
 
 const Sunbeam = require('.')
+const UALPrivateKey = require('./ual-privatekey/PrivateKeyUser')
+const config = require('./config/example-ws.config.json')
 
-let ScatterJS = require('scatterjs-core')
-if (ScatterJS.default) {
-  // package was precompiled for babel es6 modules
-  ScatterJS = ScatterJS.default
-}
-
-let ScatterEOS = require('scatterjs-plugin-eosjs2')
-if (ScatterEOS.default) {
-  // package was precompiled for babel es6 modules
-  ScatterEOS = ScatterEOS.default
-}
-
-ScatterJS.plugins(new ScatterEOS())
-
-const { Api, JsonRpc } = require('eosjs')
+const fetch = require('node-fetch')
 
 // nodejs
-const fetch = require('node-fetch')
+const { Api, JsonRpc } = require('eosjs')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'https://api-paper.eosfinex.com'
+const httpEndpoint = 'https://test-api.eosfinex.com'
 
 const rpc = new JsonRpc(httpEndpoint, { fetch })
 const api = new Api({
@@ -38,20 +26,14 @@ const client = {
 
 const conf = {
   urls: {
-    priv: 'wss://api-paper.eosfinex.com/ws',
-    pub: 'wss://api.bitfinex.com/ws/2'
+    priv: 'wss://test-api.eosfinex.com/ws',
+    pub: 'wss://api.staging.bitfinex.com/ws/2'
   },
   eos: {
     expireInSeconds: 60 * 60, // 1 hour,
     httpEndpoint, // used to get metadata for signing transactions
     exchangeContract: 'eosfinextest', // exchange contract name
-    auth: {
-      scatter: {
-        ScatterJS,
-        appName: 'Eosfinex-Demo-Scatter'
-      },
-      keys: null
-    }
+    auth: {}
   },
   transform: {
     orderbook: { keyed: true },
@@ -59,11 +41,25 @@ const conf = {
     orders: { keyed: true }
   }
 }
+const accountName = 'eosfinextt22'
+const privateKey = '5KXSaoq3rWRTUSxWuPnizWpruLoAvNZvQVttKR7ibiLyNpvsvAp'
+
+const ualUser = new UALPrivateKey(rpc, accountName, privateKey)
 
 const ws = new Sunbeam(client, conf)
+
+ws.setAuth({
+  client: {
+    ...client,
+    ual: ualUser
+  },
+  ual: {
+    user: ualUser
+  }
+})
+
 const pair = 'tBTCUSD'
 const placedOrders = []
-
 ws.on('message', (m) => {
   console.log(m)
 })

@@ -49,7 +49,7 @@ node example-ws.js
 
 ## Websocket API
 
-You can see all API calls in [example-ws.js](example-ws.js) or [example-scatter.js](example-scatter.js).
+You can see all API calls in [example-ws.js](example-ws.js) or [example-ual.js](example-ual.js).
 
 ### `new Sunbeam(client, opts) => sunbeam`
   - `client <Object>`
@@ -64,14 +64,6 @@ You can see all API calls in [example-ws.js](example-ws.js) or [example-scatter.
       - `expireInSeconds <Number>` Expiration time for signed tx. 7 days by default
       - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
       - `exchangeContract <String|null>` name of the used exchange contract, defaults to `efinexchange`
-      - `auth` Auth options
-        - `keys` use default signing
-          - `keyProvider <String>` your key, used to sign transactions
-          - `account <String>` accountname to use for the key
-          - `permission <String>` permission level to use for the account
-        - `scatter <Object>` Scatter options if scatter is used for signing
-          - `appName <String>` App name showed to Scatter user
-          - `ScatterJS <Object>` Scatter instance
     - `state <Object>` Options passed to state components
       - `transform <Object>` transformation options (keyed objects or array format)
         - `orderbook <Object>`
@@ -80,6 +72,20 @@ You can see all API calls in [example-ws.js](example-ws.js) or [example-scatter.
         - `orders <Object>`
           - `keyed <Boolean>` Manage state as keyed Objects instead of an Array
           - `markDeleted <Boolean>` cancelled orders are flagged as deleted, but not removed from the state
+
+#### Authentication
+
+Sunbeam support private key or [UAL](https://github.com/EOSIO/universal-authenticator-library)
+Provide an object to `sunbeam.setAuth` to desired authentication method
+```js
+  - `keys` use default signing
+    - `keyProvider <String>` your key, used to sign transactions
+    - `account <String>` accountname to use for the key
+    - `permission <String>` permission level to use for the account
+  - `ual <Object>` UAL options if UAL is used for signing
+    - `user <String>` Authenticated UAL user
+```
+
 
 ```js
 // prepare eosjs lib for signing of websocket messages
@@ -119,13 +125,6 @@ const opts = {
     expireInSeconds: 7 * 24 * 60 * 60, // 7 days
     httpEndpoint, // Used to get metadata for signing transactions
     exchangeContract: 'eosfinexeos1', // Name of the exchange contract
-    auth: {
-      keys: {
-        account: '', // Account name to use
-        permission: 'active'
-      },
-      scatter: null
-    }
   },
   state: {
     transform: {
@@ -137,6 +136,13 @@ const opts = {
 }
 
 const ws = new Sunbeam(client, opts)
+sunbeam.setAuth({
+  {
+    ual: {
+      user: '', // UAL user object
+    },
+  }
+})
 ```
 In order to start trading it is required to sign up for the platform at [eosfinex.com](https://www.eosfinex.com/) and accept [terms of services](https://www.eosfinex.com/legal/exchange/terms).
 
