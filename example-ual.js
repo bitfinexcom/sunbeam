@@ -26,16 +26,15 @@ const client = {
 }
 
 const ualUser = new UALPrivateKey(rpc, opts.auth.ual.accountName, opts.auth.ual.privateKey)
-
-const ws = new Sunbeam(client, opts)
-
-ws.setAuth({
-  client: {
-    ...client,
-    ual: ualUser
-  },
-  ual: {
-    user: ualUser
+const ws = new Sunbeam(client, {
+  ...opts,
+  eos: {
+    ...opts.eos,
+    auth: {
+      ual: {
+        user: ualUser
+      }
+    }
   }
 })
 
