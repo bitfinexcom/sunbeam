@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "standard && mocha",
+    "prepare": "npm run setup-build && npm run babelify",
     "setup-build": "rm -rf dist && mkdir -p dist",
     "babelify": "browserify -s Sunbeam lib/index.js -o dist/index.js -t [ babelify --presets [ @babel/preset-env ] --global ]",
     "standard": "standard"
