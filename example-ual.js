@@ -1,30 +1,19 @@
 'use strict'
 
 const Sunbeam = require('.')
+const UALPrivateKey = require('./ual-privatekey/PrivateKeyUser')
+const config = require('./config/example-ual.config.json')
 
-let ScatterJS = require('scatterjs-core')
-if (ScatterJS.default) {
-  // package was precompiled for babel es6 modules
-  ScatterJS = ScatterJS.default
-}
+const env = 'staging'
+const opts = config[env]
 
-let ScatterEOS = require('scatterjs-plugin-eosjs2')
-if (ScatterEOS.default) {
-  // package was precompiled for babel es6 modules
-  ScatterEOS = ScatterEOS.default
-}
-
-ScatterJS.plugins(new ScatterEOS())
-
-const { Api, JsonRpc } = require('eosjs')
+const fetch = require('node-fetch')
 
 // nodejs
-const fetch = require('node-fetch')
+const { Api, JsonRpc } = require('eosjs')
 const { TextDecoder, TextEncoder } = require('util')
 
-const httpEndpoint = 'https://api-paper.eosfinex.com'
-
-const rpc = new JsonRpc(httpEndpoint, { fetch })
+const rpc = new JsonRpc(opts.eos.httpEndpoint, { fetch })
 const api = new Api({
   rpc,
   textDecoder: new TextDecoder(),
@@ -36,34 +25,21 @@ const client = {
   api
 }
 
-const conf = {
-  urls: {
-    priv: 'wss://api-paper.eosfinex.com/ws',
-    pub: 'wss://api.bitfinex.com/ws/2'
-  },
+const ualUser = new UALPrivateKey(rpc, opts.auth.ual.accountName, opts.auth.ual.privateKey)
+const ws = new Sunbeam(client, {
+  ...opts,
   eos: {
-    expireInSeconds: 60 * 60, // 1 hour,
-    httpEndpoint, // used to get metadata for signing transactions
-    exchangeContract: 'eosfinextest', // exchange contract name
+    ...opts.eos,
     auth: {
-      scatter: {
-        ScatterJS,
-        appName: 'Eosfinex-Demo-Scatter'
-      },
-      keys: null
+      ual: {
+        user: ualUser
+      }
     }
-  },
-  transform: {
-    orderbook: { keyed: true },
-    wallet: {},
-    orders: { keyed: true }
   }
-}
+})
 
-const ws = new Sunbeam(client, conf)
 const pair = 'tBTCUSD'
 const placedOrders = []
-
 ws.on('message', (m) => {
   console.log(m)
 })

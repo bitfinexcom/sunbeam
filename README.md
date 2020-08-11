@@ -49,7 +49,8 @@ node example-ws.js
 
 ## Websocket API
 
-You can see all API calls in [example-ws.js](example-ws.js) or [example-scatter.js](example-scatter.js).
+You can see all API calls in [example-ws.js](example-ws.js) or [example-ual.js](example-ual.js).
+Sunbeam support private key or [UAL](https://github.com/EOSIO/universal-authenticator-library) for authentication.
 
 ### `new Sunbeam(client, opts) => sunbeam`
   - `client <Object>`
@@ -64,14 +65,13 @@ You can see all API calls in [example-ws.js](example-ws.js) or [example-scatter.
       - `expireInSeconds <Number>` Expiration time for signed tx. 7 days by default
       - `httpEndpoint <String|null>` an Eos node HTTP endpoint, used to get the contract abi, if abi not passed via options.
       - `exchangeContract <String|null>` name of the used exchange contract, defaults to `efinexchange`
-      - `auth` Auth options
-        - `keys` use default signing
-          - `keyProvider <String>` your key, used to sign transactions
-          - `account <String>` accountname to use for the key
-          - `permission <String>` permission level to use for the account
-        - `scatter <Object>` Scatter options if scatter is used for signing
-          - `appName <String>` App name showed to Scatter user
-          - `ScatterJS <Object>` Scatter instance
+    - `auth` Auth options
+      - `keys` use default signing
+        - `keyProvider <String>` your key, used to sign transactions
+        - `account <String>` accountname to use for the key
+        - `permission <String>` permission level to use for the account
+      - `ual <Object>` UAL options if UAL is used for signing
+        - `user <String>` Authenticated UAL user
     - `state <Object>` Options passed to state components
       - `transform <Object>` transformation options (keyed objects or array format)
         - `orderbook <Object>`
@@ -120,12 +120,10 @@ const opts = {
     httpEndpoint, // Used to get metadata for signing transactions
     exchangeContract: 'eosfinexeos1', // Name of the exchange contract
     auth: {
-      keys: {
-        account: '', // Account name to use
-        permission: 'active'
+      ual: {
+        user: '', // UAL user object
       },
-      scatter: null
-    }
+    },
   },
   state: {
     transform: {
