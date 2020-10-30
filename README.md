@@ -302,7 +302,7 @@ Forgets scatter identity (if scatter is used for auth).
   - `order <Object>`
     - `symbol <String>` Token pair to trade for
     - `amount <String>` Amount to buy/sell
-    - `type <String>` Order type, `EXCHANGE MARKET`, `EXCHANGE LIMIT`, `EXCHANGE STOP`, `EXCHANGE STOP LIMIT`, `EXCHANGE TRAILING STOP`, `EXCHANGE FOK`, `EXCHANGE IOC`
+    - `type <String>` Order type, `EXCHANGE MARKET`, `EXCHANGE LIMIT`, `EXCHANGE STOP`, `EXCHANGE FOK`, `EXCHANGE IOC`
     - `price <String>` Price for orders except market orders
     - `cid <Number>` Every order must have a unique id assigned from the client, defaults to current timestamp
     - `gid <Number>` Group id for the order, optional
