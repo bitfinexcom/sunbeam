@@ -7,12 +7,16 @@
     "eos": {
       "expireInSeconds": 3600,
       "httpEndpoint": "__MAINNET_ENDPOINT__",
-      "exchangeContract": "eosfinextest"
-    },
-    "auth": {
-      "ual": {
-        "accountName": "__ACCOUNT__",
-        "privateKey": "__PRIVATE_KEY__"
+      "exchangeContract": "eosfinextest",
+      "addAuth": {
+        "account": "__ACCOUNT__",
+        "permission": "__PERMISSION__"
+      },
+      "auth": {
+        "ual": {
+          "accountName": "__ACCOUNT__",
+          "privateKey": "__PRIVATE_KEY__"
+        }
       }
     },
     "transform": {
