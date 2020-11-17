@@ -306,7 +306,9 @@ Forgets scatter identity (if scatter is used for auth).
     - `price <String>` Price for orders except market orders
     - `cid <Number>` Every order must have a unique id assigned from the client, defaults to current timestamp
     - `gid <Number>` Group id for the order, optional
-    - `flags <Number>` See [flags list](#list-of-available-flags) 
+    - `flags <Number>` See [flags list](#list-of-available-flags)
+    - `tif <Datetime string> or <Number>` Time-In-Force: datetime for automatic order cancellation (ie. `2020-01-01 10:45:23`). *Applicable to `EXCHANGE LIMIT` orders only.*
+    `tif` may be an integer value representing the number of milliseconds since January 1, 1970, or a string value representing a date ([see more here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#Date_Time_String_Format)). **NOTE:** if no timezone is passed, client timezone will be implied. 
 
 Creates an order compatible with the contract ABI, pre-signs it and sends it
 to the Websocket endpoint.
