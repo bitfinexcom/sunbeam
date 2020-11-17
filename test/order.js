@@ -136,7 +136,9 @@ describe('order helper', () => {
     }, conf)
     const d = Date.now()
     const { order } = ask.serialize()
-
+    ask.ccyMap = {
+      UST: 'USDT'
+    }
     assert.ok(order.nonce - d >= 0 && order.nonce - d <= 1000)
     assert.strictEqual(order.seskey1, conf.seskey1)
     assert.strictEqual(order.seskey2, conf.seskey2)

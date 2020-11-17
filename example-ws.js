@@ -20,6 +20,10 @@ const signatureProvider = new JsSignatureProvider(keys)
 
 const rpc = new JsonRpc(httpEndpoint, { fetch })
 const api = new Api({
+  // use available keys to get partially signed transaction on the client side
+  authorityProvider: {
+    getRequiredKeys: () => signatureProvider.getAvailableKeys()
+  },
   rpc,
   signatureProvider,
   textDecoder: new TextDecoder(),
@@ -48,6 +52,23 @@ const pair = 'tBTCUSD'
 const placedOrders = []
 
 ws.on('open', async () => {
+  /*
+  * Pubkey update requires modification of the eosjs api instance.
+  * Modified API instance is required on the Sunbeam instance creation
+  *
+  * const api = new Api({
+  *   // use available keys to get partially signed transaction on the client side
+  *   authorityProvider: {
+  *     getRequiredKeys: () => signatureProvider.getAvailableKeys()
+  *   },
+  *   rpc,
+  *   signatureProvider,
+  *   textDecoder: new TextDecoder(),
+  *   textEncoder: new TextEncoder()
+  * })
+  */
+  // await ws.updateKey({ account: 'dfuser111111', pubkey: 'EOS4yoFY8MChyDzQUk1H6hr7CwEfPmWhRatSqaCCyxk8hJUZZ3uii' })
+
   await ws.auth()
 
   ws.send('priv', { event: 'chain' })
