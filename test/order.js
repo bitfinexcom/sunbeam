@@ -134,16 +134,31 @@ describe('order helper', () => {
       type: 'EXCHANGE MARKET',
       flags: 4096
     }, conf)
-    const d = Date.now()
-    const { order } = ask.serialize()
     ask.ccyMap = {
       UST: 'USDT'
     }
+    const d = Date.now()
+    const { order } = ask.serialize()
     assert.ok(order.nonce - d >= 0 && order.nonce - d <= 1000)
     assert.strictEqual(order.seskey1, conf.seskey1)
     assert.strictEqual(order.seskey2, conf.seskey2)
     assert.strictEqual(order.price, '440.00000000 USDT')
     assert.strictEqual(order.amount, '-0.99000000 BTC')
     assert.strictEqual(order.flags, 1)
+    assert.strictEqual(order.tif, undefined)
+  })
+
+  it('adds tif to the order', () => {
+    const ask = new Order({
+      symbol: 'tBTCUST',
+      amount: '-0.99',
+      price: '440',
+      type: 'EXCHANGE LIMIT',
+      flags: 4096,
+      tif: '2020-10-10T14:48:00Z'
+    }, conf)
+    const msg = ask.getMsgObj()
+
+    assert.strictEqual(msg.tif, '2020-10-10 14:48:00')
   })
 })
