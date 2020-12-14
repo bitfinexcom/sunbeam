@@ -32,7 +32,6 @@
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babelify": "^9.0.0",
     "browserify": "^16.2.2",
-    "elliptic": "^6.5.3",
     "eosjs": "^20.0.3",
     "mocha": "^5.2.0",
     "node-fetch": "^2.2.1",
@@ -44,6 +43,7 @@
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "cbq": "git+https://github.com/bitfinexcom/cbq-js.git",
+    "lodash": "^4.17.20",
     "mandelbrot": "github:bitfinexcom/mandelbrot#master"
   },
   "browserslist": [
