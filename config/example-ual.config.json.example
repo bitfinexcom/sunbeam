@@ -5,7 +5,6 @@
       "priv": "ws://__API__",
     },
     "eos": {
-      "expireInSeconds": 3600,
       "httpEndpoint": "__MAINNET_ENDPOINT__",
       "exchangeContract": "eosfinextest",
       "addAuth": {

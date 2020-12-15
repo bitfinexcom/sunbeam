@@ -69,6 +69,51 @@ describe('order helper', () => {
     assert.strictEqual(ask.parsed.flags, 0)
   })
 
+  it('returns expire datetime string as tif + 1 day for EXCHANGE LIMIT with tif', () => {
+    const expectedExpireString = '2020-12-16T12:52:40'
+    const expireMs = 1608036760427 // 2020-12-15T12:52:40.427Z
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      amount: '-0.99',
+      price: 520,
+      type: 'EXCHANGE LIMIT',
+      tif: expireMs,
+      flags: 4096
+    }, conf)
+
+    assert.deepStrictEqual(ask.expirationProps, {
+      expiration: expectedExpireString
+    })
+  })
+
+  it('returns 7 day expireInSeconds EXCHANGE LIMIT', () => {
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      amount: '-0.99',
+      price: 520,
+      type: 'EXCHANGE LIMIT',
+      flags: 4096
+    }, conf)
+
+    assert.deepStrictEqual(ask.expirationProps, {
+      expireInSeconds: 7 * 24 * 60 * 60
+    })
+  })
+
+  it('returns 1 day expireInSeconds', () => {
+    const ask = new Order({
+      symbol: 'tBTCUSD',
+      amount: '-0.99',
+      price: 520,
+      type: 'EXCHANGE MARKET',
+      flags: 4096
+    }, conf)
+
+    assert.deepStrictEqual(ask.expirationProps, {
+      expireInSeconds: 24 * 60 * 60
+    })
+  })
+
   it('builds message object from parsed value', () => {
     const ask = new Order({
       symbol: 'tBTCUSD',
