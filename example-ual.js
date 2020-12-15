@@ -1,31 +1,21 @@
 'use strict'
 
 const Sunbeam = require('.')
-
-const config = require('./config/example-ws.config.json')
+const UALPrivateKey = require('./ual-privatekey/PrivateKeyUser')
+const config = require('./config/example-ual.config.json')
 
 const env = 'staging'
 const opts = config[env]
 
-const keys = opts.keys
-const httpEndpoint = opts.eos.httpEndpoint
-
-const { Api, JsonRpc } = require('eosjs')
-const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig')
-
 const fetch = require('node-fetch')
+
+// nodejs
+const { Api, JsonRpc } = require('eosjs')
 const { TextDecoder, TextEncoder } = require('util')
 
-const signatureProvider = new JsSignatureProvider(keys)
-
-const rpc = new JsonRpc(httpEndpoint, { fetch })
+const rpc = new JsonRpc(opts.eos.httpEndpoint, { fetch })
 const api = new Api({
-  // use available keys to get partially signed transaction on the client side
-  authorityProvider: {
-    getRequiredKeys: () => signatureProvider.getAvailableKeys()
-  },
   rpc,
-  signatureProvider,
   textDecoder: new TextDecoder(),
   textEncoder: new TextEncoder()
 })
@@ -35,12 +25,23 @@ const client = {
   api
 }
 
-// setup sunbeam
-const ws = new Sunbeam(client, opts)
+const ualUser = new UALPrivateKey(rpc, opts.auth.ual.accountName, opts.auth.ual.privateKey)
+const ws = new Sunbeam(client, {
+  ...opts,
+  eos: {
+    ...opts.eos,
+    auth: {
+      ual: {
+        user: ualUser
+      }
+    }
+  }
+})
 
-ws.on('message', (m, t) => {
-  console.log('------- msg -----')
-  console.log(t, m)
+const pair = 'tBTCUSD'
+const placedOrders = []
+ws.on('message', (m) => {
+  console.log(m)
 })
 
 ws.on('error', (m) => {
@@ -48,28 +49,8 @@ ws.on('error', (m) => {
   console.error(m)
 })
 
-const pair = 'tBTCUSD'
-const placedOrders = []
-
 ws.on('open', async () => {
-  /*
-  * Pubkey update requires modification of the eosjs api instance.
-  * Modified API instance is required on the Sunbeam instance creation
-  *
-  * const api = new Api({
-  *   // use available keys to get partially signed transaction on the client side
-  *   authorityProvider: {
-  *     getRequiredKeys: () => signatureProvider.getAvailableKeys()
-  *   },
-  *   rpc,
-  *   signatureProvider,
-  *   textDecoder: new TextDecoder(),
-  *   textEncoder: new TextEncoder()
-  * })
-  */
-  // await ws.updateKey({ account: 'dfuser111111', pubkey: 'EOS4yoFY8MChyDzQUk1H6hr7CwEfPmWhRatSqaCCyxk8hJUZZ3uii' })
-
-  await ws.auth()
+  console.log(await ws.auth())
 
   ws.send('priv', { event: 'chain' })
   // or const meta = await ws.requestChainMeta('priv')
@@ -128,6 +109,11 @@ ws.on('open', async () => {
     console.log('private trade', data)
   })
 
+  ws.onPublicTrades({}, (data) => {
+    console.log('ws.onPublicTrades({})')
+    console.log('public trade', data)
+  })
+
   /* const { txResult, txData } = await ws.deposit({
     currency: 'BTC',
     amount: '0.687'
@@ -141,7 +127,7 @@ ws.on('open', async () => {
   // available types: EXCHANGE MARKET, EXCHANGE LIMIT, EXCHANGE STOP, EXCHANGE STOP LIMIT, EXCHANGE TRAILING STOP, EXCHANGE FOK, EXCHANGE IOC
   const order = {
     symbol: pair,
-    price: '900',
+    price: '11100',
     amount: '-0.01',
     type: 'EXCHANGE LIMIT',
     cid: '1332'

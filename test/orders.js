@@ -10,7 +10,7 @@ const snapMsg = ['0',
   [['18446744073709551615',
     null,
     12345,
-    'BTC.USD',
+    'tBTCUSD',
     1536247373000987,
     1536247378501049,
     0.9,
@@ -75,7 +75,7 @@ const snapMsg = ['0',
 const emptySnapMsg = ['0', 'os', []]
 
 const onMsg = ['0', 'on', [
-  '1', null, 1234578910, 'BTC.USD', 1536325337500752,
+  '1', null, 1234578910, 'tBTCUSD', 1536325337500752,
   1536325337500752, -1.000000, -1.000000, 'LIMIT', null, null, null, 0,
   'ACTIVE', null, null, 500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
   'API>EFX', null, null, null]]
@@ -87,13 +87,13 @@ const onMsgEOS = ['0', 'on', [
   'API>EFX', null, null, null]]
 
 const ouMsg = ['0', 'ou', [
-  '1', null, 1234578910, 'BTC.USD', 1536325337500612, 1536325337500612,
+  '1', null, 1234578910, 'tBTCUSD', 1536325337500612, 1536325337500612,
   -10.000000, -10.000000, 'LIMIT', null, null, null, 0, 'ACTIVE', null, null,
   500.000000, 0, 0, 0, null, null, null, 0, 0, 0, null, null,
   'API>EFX', null, null, null]]
 
 const ocMsg = ['0', 'oc', [
-  '1', null, 1234578910, 'BTC.USD', 1547142966504439,
+  '1', null, 1234578910, 'tBTCUSD', 1547142966504439,
   1547143021501823, 0, 10.99, 'LIMIT', null, null, null, 0, 'fully.filled', null, null,
   3, 0, 0, 0, null, null, null, 0, 0, 0, null, null, 'API>EFX', null, null, null], 1]
 
@@ -190,7 +190,7 @@ describe('orders helper', () => {
     const exp = {
       id: '18446744073709551615',
       clientId: 12345,
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: 0.9,
       origAmount: 1,
       type: 'LIMIT',
@@ -212,7 +212,7 @@ describe('orders helper', () => {
     const exp = {
       id: '1',
       clientId: 1234578910,
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: -1,
       origAmount: -1,
       type: 'LIMIT',
@@ -232,7 +232,7 @@ describe('orders helper', () => {
     const exp = {
       id: '1',
       clientId: 1234578910,
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: -1,
       origAmount: -1,
       type: 'LIMIT',
@@ -248,7 +248,7 @@ describe('orders helper', () => {
     const expUpdt = {
       id: '1',
       clientId: 1234578910,
-      symbol: 'BTC.USD',
+      symbol: 'tBTCUSD',
       amount: -10,
       origAmount: -10,
       type: 'LIMIT',

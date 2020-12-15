@@ -7,7 +7,8 @@
     "test": "standard && mocha",
     "prepare": "npm run setup-build && npm run babelify",
     "setup-build": "rm -rf dist && mkdir -p dist",
-    "babelify": "browserify -s Sunbeam lib/index.js -o dist/index.js -t [ babelify --presets [ @babel/preset-env ] --global ]"
+    "babelify": "browserify -s Sunbeam lib/index.js -o dist/index.js -t [ babelify --presets [ @babel/preset-env ] --global ]",
+    "standard": "standard"
   },
   "keywords": [
     "eos",
@@ -26,24 +27,24 @@
     "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@scatterjs/core": "^2.7.53",
+    "@scatterjs/eosjs2": "^1.5.35",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babelify": "^9.0.0",
     "browserify": "^16.2.2",
+    "eosjs": "^20.0.3",
     "mocha": "^5.2.0",
     "node-fetch": "^2.2.1",
-    "scatterjs-core": "^2.7.17",
-    "scatterjs-plugin-eosjs2": "^1.5.0",
-    "standard": "^14.0.0"
+    "standard": "^14.0.0",
+    "universal-authenticator-library": "^0.3.0",
+    "ws": "^7.3.1"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.0.0",
-    "big.js": "^5.1.2",
     "cbq": "git+https://github.com/bitfinexcom/cbq-js.git",
-    "eosjs": "^20.0.0",
-    "isomorphic-ws": "^4.0.1",
-    "mandelbrot": "https://github.com/bitfinexcom/mandelbrot.git#4a810a3caf4f1e89e563c68d8ee43dbbeb1c0411",
-    "ws": "^6.1.0"
+    "lodash": "^4.17.20",
+    "mandelbrot": "github:bitfinexcom/mandelbrot#master"
   },
   "browserslist": [
     "IE 11",

@@ -1,0 +1,28 @@
+{
+  "staging": {
+    "urls": {
+      "pub": "ws://__API__",
+      "priv": "ws://__API__",
+    },
+    "eos": {
+      "expireInSeconds": 3600,
+      "httpEndpoint": "__MAINNET_ENDPOINT__",
+      "exchangeContract": "eosfinextest",
+      "addAuth": {
+        "account": "__ACCOUNT__",
+        "permission": "__PERMISSION__"
+      },
+      "auth": {
+        "ual": {
+          "accountName": "__ACCOUNT__",
+          "privateKey": "__PRIVATE_KEY__"
+        }
+      }
+    },
+    "transform": {
+      "orderbook": { "keyed": true },
+      "wallet": {},
+      "orders": { "keyed": true }
+    }
+  }
+}

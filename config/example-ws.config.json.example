@@ -8,7 +8,12 @@
       "aux": "ws://__API__"
     },
     "eos": {
-      "expireInSeconds": 3600,
+      "exchangeContract": "__CONTRACT__",
+      "expireInSeconds": 129600,
+      "addAuth": {
+        "account": "__ACCOUNT__",
+        "permission": "__PERMISSION__"
+      },
       "httpEndpoint": "http://__API__",
       "auth": {
         "keys": {
