@@ -9,7 +9,6 @@
     },
     "eos": {
       "exchangeContract": "__CONTRACT__",
-      "expireInSeconds": 129600,
       "addAuth": {
         "account": "__ACCOUNT__",
         "permission": "__PERMISSION__"
