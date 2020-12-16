@@ -1,3 +1,5 @@
+'use strict'
+
 const { User } = require('universal-authenticator-library')
 const { JsSignatureProvider } = require('eosjs/dist/eosjs-jssig')
 const { Api } = require('eosjs')
